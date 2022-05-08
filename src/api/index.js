@@ -2,6 +2,22 @@ import { Router } from 'express'
 import user from './user'
 import auth from './auth'
 import passwordReset from './password-reset'
+import product from './product'
+import category from './category'
+import order from './order'
+import rateLimit from 'express-rate-limit'
+import cart from './cart'
+import tag from './tag'
+import shop from './shop'
+import coupon from './coupon'
+import review from './review'
+import creditCard from './credit-card'
+
+const apiLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minutes
+    max: 30,
+    message: 'Too many connection',
+});
 
 const router = new Router()
 
@@ -28,8 +44,19 @@ const router = new Router()
  * @apiParam {String[]} [sort=-createdAt] Order of returned items.
  * @apiParam {String[]} [fields] Fields to be returned.
  */
+
+router.use('/', apiLimiter)
 router.use('/users', user)
 router.use('/auth', auth)
 router.use('/password-resets', passwordReset)
+router.use('/products', product)
+router.use('/categories', category)
+router.use('/orders', order)
+router.use('/carts', cart)
+router.use('/tags', tag)
+router.use('/shops', shop)
+router.use('/coupons', coupon)
+router.use('/reviews', review)
+router.use('/credit-cards', creditCard)
 
 export default router
