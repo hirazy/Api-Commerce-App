@@ -1,21 +1,43 @@
 import mongoose, { Schema } from 'mongoose'
 
-const shopSchema = new Schema({}, { timestamps: true })
+const shopSchema = new Schema({
+    products: [{
+        type: Schema.Types.ObjectId,
+        ref: "Product"
+    }],
+
+    name: {
+        type: String,
+        required: true,
+        default: ''
+    },
+
+    rating: {
+        type: Number,
+        default: 0,
+    },
+
+    follow: {
+        type: Number,
+        default: 0
+    },
+
+}, { timestamps: true })
 
 shopSchema.methods = {
-  view (full) {
-    const view = {
-      // simple view
-      id: this.id,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    }
+    view(full) {
+        const view = {
+            // simple view
+            id: this.id,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+        }
 
-    return full ? {
-      ...view
-      // add properties for a full view
-    } : view
-  }
+        return full ? {
+            ...view
+            // add properties for a full view
+        } : view
+    }
 }
 
 const model = mongoose.model('Shop', shopSchema)

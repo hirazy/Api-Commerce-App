@@ -1,21 +1,33 @@
 import mongoose, { Schema } from 'mongoose'
 
-const couponSchema = new Schema({}, { timestamps: true })
+const couponSchema = new Schema({
 
-couponSchema.methods = {
-  view (full) {
-    const view = {
-      // simple view
-      id: this.id,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+    description: {
+        required: true,
+        type: String,
+        trim: true
+    },
+    active: {
+        default: true,
+        type: Boolean
     }
 
-    return full ? {
-      ...view
-      // add properties for a full view
-    } : view
-  }
+}, { timestamps: true })
+
+couponSchema.methods = {
+    view(full) {
+        const view = {
+            // simple view
+            id: this.id,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+        }
+
+        return full ? {
+            ...view
+            // add properties for a full view
+        } : view
+    }
 }
 
 const model = mongoose.model('Coupon', couponSchema)

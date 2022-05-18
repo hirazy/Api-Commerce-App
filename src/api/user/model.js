@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import mongoose, { Schema } from 'mongoose'
 import mongooseKeywords from 'mongoose-keywords'
 import { env } from '../../config'
+import { isEmail, isMobilePhone } from 'validator';
 
 const roles = ['user', 'admin']
 
@@ -10,41 +11,66 @@ const userSchema = new Schema({
     email: {
         type: String,
         match: /^\S+@\S+\.\S+$/,
-        required: true,
+        required: false,
         unique: true,
         trim: true,
         lowercase: true,
+        validate: [isEmail, 'invalid email']
+    },
+    facebook_username: {
+        type: String,
+        required: false,
+        unique: true,
+        trim: true,
+        validate: []
     },
     password: {
         type: String,
-        required: true,
-        minlength: 6,
+        required: false,
+        minlength: 8,
         validate: []
     },
     name: {
         type: String,
         index: true,
-        trim: true
+        trim: true,
+    },
+    nickname: {
+        type: String,
+        required: false
     },
     phone: {
         type: String,
         index: true,
         trim: true,
-        unique: true
+        unique: true,
+        validate: [isMobilePhone]
     },
     dob: {
-        type: String,
+        type: Date,
+        required: false
     },
-    address: {
-        required: true,
-        type: String,
-        index: true,
-        trim: true
+    address: [{
+        type: Schema.Types.ObjectId,
+        ref: "Address"
+    }],
+    gender: {
+        required: false,
     },
     payment: {
-
+        required: false
+    },
+    respect: {
+        type: Number,
+        default: 5,
+        max: 5,
+        min: 1
     },
     coupons: {},
+    /**
+     * @param role 
+     * @field ['user, 'admin]
+     */
     role: {
         type: String,
         enum: roles,
@@ -53,6 +79,10 @@ const userSchema = new Schema({
     picture: {
         type: String,
         trim: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
     }
 }, {
     timestamps: true
@@ -71,16 +101,36 @@ userSchema.path('email').set(function(email) {
     return email
 })
 
+userSchema.path('phone').validate(function(phone) {
+    return isMobilePhone(phone, "vi-VN")
+})
+
+/**
+ * validateBeforeSave: false
+ */
+
 userSchema.pre('save', function(next) {
     if (!this.isModified('password')) return next()
 
     /* istanbul ignore next */
     const rounds = env === 'test' ? 1 : 9
 
+    // CryptoJS.AES.encrypt(password, process.env.PASSWORD_SECRET)
+
     bcrypt.hash(this.password, rounds).then((hash) => {
         this.password = hash
         next()
     }).catch(next)
+})
+
+userSchema.virtual('domain').get(function() {
+    return this.email.slice()
+})
+
+userSchema.plugin(schema => console.log(userSchema.path('name').path))
+
+userSchema.pre('deleteOne', function() {
+
 })
 
 userSchema.methods = {
@@ -99,8 +149,11 @@ userSchema.methods = {
 
     authenticate(password) {
         return bcrypt.compare(password, this.password).then((valid) => valid ? this : false)
-    }
+    },
 
+    isAdmin() {
+        return this.roles == 'admin'
+    }
 }
 
 userSchema.statics = {

@@ -12,6 +12,14 @@ import shop from './shop'
 import coupon from './coupon'
 import review from './review'
 import creditCard from './credit-card'
+import shipping from './shipping'
+import image from './image'
+import address from './address'
+import version from './version'
+import follow from './follow'
+import message from './message'
+import timeline from './timeline'
+import resource from './resource'
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
@@ -58,5 +66,13 @@ router.use('/shops', shop)
 router.use('/coupons', coupon)
 router.use('/reviews', review)
 router.use('/credit-cards', creditCard)
+router.use('/shippings', shipping)
+router.use('/images', image)
+router.use('/addresses', address)
+router.use('/versions', version)
+router.use('/follows', follow)
+router.use('/messages', message)
+router.use('/timelines', timeline)
+router.use('/resources', resource)
 
 export default router

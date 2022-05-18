@@ -16,6 +16,11 @@ const router = new Router()
 router.post('/',
     create)
 
+// /**
+//  * @api
+//  */
+// router.post()
+
 /**
  * @api {get} /tags Retrieve tags
  * @apiName RetrieveTags

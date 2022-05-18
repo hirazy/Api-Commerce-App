@@ -10,8 +10,14 @@ const cartSchema = new Schema({
         ref: "User"
     },
     description: {
-        type: String
+        type: String,
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        default: 1
     }
+
 }, { timestamps: true })
 
 cartSchema.methods = {

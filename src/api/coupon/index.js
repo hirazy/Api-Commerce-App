@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
-export Coupon, { schema } from './model'
+import Coupon, { schema } from './model'
 
 const router = new Router()
 
@@ -14,7 +14,7 @@ const router = new Router()
  * @apiError 404 Coupon not found.
  */
 router.post('/',
-  create)
+    create)
 
 /**
  * @api {get} /coupons Retrieve coupons
@@ -25,8 +25,8 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-  query(),
-  index)
+    query(),
+    index)
 
 /**
  * @api {get} /coupons/:id Retrieve coupon
@@ -37,7 +37,7 @@ router.get('/',
  * @apiError 404 Coupon not found.
  */
 router.get('/:id',
-  show)
+    show)
 
 /**
  * @api {put} /coupons/:id Update coupon
@@ -48,7 +48,7 @@ router.get('/:id',
  * @apiError 404 Coupon not found.
  */
 router.put('/:id',
-  update)
+    update)
 
 /**
  * @api {delete} /coupons/:id Delete coupon
@@ -58,6 +58,6 @@ router.put('/:id',
  * @apiError 404 Coupon not found.
  */
 router.delete('/:id',
-  destroy)
+    destroy)
 
 export default router

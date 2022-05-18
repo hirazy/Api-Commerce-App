@@ -1,2 +1,2 @@
-export { applicationLimiter }
+export { appLimiter }
 from './application'

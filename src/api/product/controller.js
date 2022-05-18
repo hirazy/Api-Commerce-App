@@ -22,8 +22,11 @@ export const show = ({ params }, res, next) =>
 
 export const searchByKeyWord = ({ params }, res, next) =>
     Product.populate(
-        'name',
+        'name', params.name
     )
+    .then(notFound(res))
+    .then((products) => products.map((product) => product.view()))
+    .catch(next)
 
 export const update = ({ body, params }, res, next) =>
     Product.findById(params.id)

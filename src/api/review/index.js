@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
+import { master, token } from '../../services/passport'
 import Review, { schema } from './model'
 
 const router = new Router()
@@ -14,6 +15,8 @@ const router = new Router()
  * @apiError 404 Review not found.
  */
 router.post('/',
+    master(),
+    token({ required: true }),
     create)
 
 /**
