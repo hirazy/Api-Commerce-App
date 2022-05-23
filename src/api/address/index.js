@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
+import { master, token } from '../../services/passport'
 import Address, { schema } from './model'
 
 const router = new Router()
@@ -14,6 +15,7 @@ const router = new Router()
  * @apiError 404 Address not found.
  */
 router.post('/',
+    master(),
     create)
 
 /**
@@ -25,6 +27,8 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
+    master(),
+    token({ required: true, roles: ['admin'] }),
     query(),
     index)
 
@@ -37,6 +41,8 @@ router.get('/',
  * @apiError 404 Address not found.
  */
 router.get('/:id',
+    master(),
+    token({ required: true }),
     show)
 
 /**
@@ -48,6 +54,8 @@ router.get('/:id',
  * @apiError 404 Address not found.
  */
 router.put('/:id',
+    master(),
+    token({ required: true }),
     update)
 
 /**
@@ -58,6 +66,8 @@ router.put('/:id',
  * @apiError 404 Address not found.
  */
 router.delete('/:id',
+    master(),
+    token({ required: true, roles: ['admin'] }),
     destroy)
 
 export default router

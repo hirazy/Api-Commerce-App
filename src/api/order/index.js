@@ -3,6 +3,8 @@ import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
 import Order, { schema } from './model'
 
+// const {}
+
 const router = new Router()
 
 /**

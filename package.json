@@ -56,15 +56,18 @@
     "compression": "^1.7.4",
     "concurrently": "^7.1.0",
     "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
     "express": "^4.17.1",
     "express-force-ssl": "^0.3.2",
     "express-rate-limit": "^6.4.0",
     "helmet": "^5.0.2",
+    "install": "^0.13.0",
     "ipaddr.js": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.4",
     "mongoose-keywords": "^0.4.0",
     "morgan": "^1.9.1",
+    "npm": "^8.10.0",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "passport-http": "^0.3.0",
@@ -77,6 +80,7 @@
     "request-promise": "^4.2.5",
     "sequelize": "^6.19.0",
     "stripe": "^9.1.0",
+    "twilio": "^3.77.1",
     "validator": "^13.7.0"
   }
 }

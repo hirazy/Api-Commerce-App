@@ -4,18 +4,27 @@ const messageSchema = new Schema({
     user: {
         ref: "User",
         type: Schema.Types.ObjectId,
-        required: true
+        required: false
+    },
+    shop: {
+        ref: 'Shop',
+        type: Schema.Types.ObjectId,
+        required: false
+    },
+    resource: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'Resource'
     },
     content: {
         type: String,
         default: ""
     },
-    isImage: {
+    isResource: {
         type: Boolean,
         required: true,
         default: false
-    },
-
+    }
 }, { timestamps: true })
 
 messageSchema.methods = {

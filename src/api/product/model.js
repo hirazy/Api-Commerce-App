@@ -24,6 +24,11 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     }],
+    sold: {
+        required: false,
+        type: Number,
+        default: 0
+    },
     quantity: {
         type: Number,
         default: 0
@@ -87,6 +92,11 @@ productSchema.methods = {
             ...view
             // add properties for a full view
         } : view
+    },
+
+    addSold(number) {
+        this.sold += number
+        this.save()
     }
 }
 

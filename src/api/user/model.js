@@ -52,13 +52,17 @@ const userSchema = new Schema({
     },
     address: [{
         type: Schema.Types.ObjectId,
-        ref: "Address"
+        ref: "Address",
+        required: false
     }],
     gender: {
         required: false,
+        type: String,
+        enum: ['Nam', 'Nữ', 'Khác']
     },
     payment: {
         required: false
+
     },
     respect: {
         type: Number,

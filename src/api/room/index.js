@@ -2,19 +2,17 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
 import { master, token } from '../../services/passport'
-import Cart, { schema } from './model'
-
-// const { product, user, } = schema.tree
+import Room, { schema } from './model'
 
 const router = new Router()
 
 /**
- * @api {post} /carts Create cart
- * @apiName CreateCart
- * @apiGroup Cart
- * @apiSuccess {Object} cart Cart's data.
+ * @api {post} /rooms Create room
+ * @apiName CreateRoom
+ * @apiGroup Room
+ * @apiSuccess {Object} room Room's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Cart not found.
+ * @apiError 404 Room not found.
  */
 router.post('/',
     master(),
@@ -22,26 +20,25 @@ router.post('/',
     create)
 
 /**
- * @api {get} /carts Retrieve carts
- * @apiName RetrieveCarts
- * @apiGroup Cart
+ * @api {get} /rooms Retrieve rooms
+ * @apiName RetrieveRooms
+ * @apiGroup Room
  * @apiUse listParams
- * @apiSuccess {Object[]} carts List of carts.
+ * @apiSuccess {Object[]} rooms List of rooms.
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-    query(),
     master(),
-    token({ required: true, roles: ['admin'] }),
+    query(),
     index)
 
 /**
- * @api {get} /carts/:id Retrieve cart
- * @apiName RetrieveCart
- * @apiGroup Cart
- * @apiSuccess {Object} cart Cart's data.
+ * @api {get} /rooms/:id Retrieve room
+ * @apiName RetrieveRoom
+ * @apiGroup Room
+ * @apiSuccess {Object} room Room's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Cart not found.
+ * @apiError 404 Room not found.
  */
 router.get('/:id',
     master(),
@@ -49,12 +46,12 @@ router.get('/:id',
     show)
 
 /**
- * @api {put} /carts/:id Update cart
- * @apiName UpdateCart
- * @apiGroup Cart
- * @apiSuccess {Object} cart Cart's data.
+ * @api {put} /rooms/:id Update room
+ * @apiName UpdateRoom
+ * @apiGroup Room
+ * @apiSuccess {Object} room Room's data.
  * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Cart not found.
+ * @apiError 404 Room not found.
  */
 router.put('/:id',
     master(),
@@ -62,14 +59,13 @@ router.put('/:id',
     update)
 
 /**
- * @api {delete} /carts/:id Delete cart
- * @apiName DeleteCart
- * @apiGroup Cart
+ * @api {delete} /rooms/:id Delete room
+ * @apiName DeleteRoom
+ * @apiGroup Room
  * @apiSuccess (Success 204) 204 No Content.
- * @apiError 404 Cart not found.
+ * @apiError 404 Room not found.
  */
 router.delete('/:id',
-    master(),
     token({ required: true, roles: ['admin'] }),
     destroy)
 

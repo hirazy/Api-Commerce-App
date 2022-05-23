@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
+import { master, token } from '../../services/passport'
 import Category, { schema } from './model'
 
 const router = new Router()
@@ -14,7 +15,9 @@ const router = new Router()
  * @apiError 404 Category not found.
  */
 router.post('/',
-  create)
+    master(),
+    token({ required: true }),
+    create)
 
 /**
  * @api {get} /categories Retrieve categories
@@ -25,8 +28,9 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-  query(),
-  index)
+    query(),
+    master(),
+    index)
 
 /**
  * @api {get} /categories/:id Retrieve category
@@ -37,7 +41,8 @@ router.get('/',
  * @apiError 404 Category not found.
  */
 router.get('/:id',
-  show)
+    master(),
+    show)
 
 /**
  * @api {put} /categories/:id Update category
@@ -48,7 +53,7 @@ router.get('/:id',
  * @apiError 404 Category not found.
  */
 router.put('/:id',
-  update)
+    update)
 
 /**
  * @api {delete} /categories/:id Delete category
@@ -58,6 +63,6 @@ router.put('/:id',
  * @apiError 404 Category not found.
  */
 router.delete('/:id',
-  destroy)
+    destroy)
 
 export default router

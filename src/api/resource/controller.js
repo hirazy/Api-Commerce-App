@@ -1,6 +1,10 @@
 import { success, notFound } from '../../services/response/'
 import Resource, { schema } from './model'
 
+/**
+ * Save in Google Cloud
+ */
+
 export const create = ({ body }, res, next) =>
     Resource.create(body)
     .then((resource) => resource.view(true))

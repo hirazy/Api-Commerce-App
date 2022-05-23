@@ -23,7 +23,32 @@ export const show = ({ params }, res, next) =>
 export const showMe = ({ user }, res) =>
     res.json(user.view(true))
 
+export const checkPhoneNumber = ({ phone }, res) => {
+    // User.find({ phone: phone })
+    //     .then()
+}
+
 export const create = ({ bodymen: { body } }, res, next) =>
+    User.create(body)
+    .then(user => {
+        sign(user.id)
+            .then((token) => ({ token, user: user.view(true) }))
+            .then(success(res, 201))
+    })
+    .catch((err) => {
+        /* istanbul ignore else */
+        if (err.name === 'MongoError' && err.code === 11000) {
+            res.status(409).json({
+                valid: false,
+                param: 'email',
+                message: 'email already registered'
+            })
+        } else {
+            next(err)
+        }
+    })
+
+export const createByEmail = ({ bodymen: { body } }, res, next) =>
     User.create(body)
     .then(user => {
         sign(user.id)

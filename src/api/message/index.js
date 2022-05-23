@@ -3,6 +3,8 @@ import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
 import Message, { schema } from './model'
 
+const { user, shop, resource, content, isResouce } = schema.tree
+
 const router = new Router()
 
 /**

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { login } from './controller'
+import { sendOtp, login } from './controller'
 import { password, master } from '../../services/passport'
 
 const router = new Router()
@@ -16,8 +16,8 @@ const router = new Router()
  * @apiError 401 Master access only or invalid credentials.
  */
 router.post('/',
-  master(),
-  password(),
-  login)
+    master(),
+    password(),
+    login)
 
 export default router

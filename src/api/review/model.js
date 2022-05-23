@@ -18,6 +18,11 @@ const reviewSchema = new Schema({
         type: Number,
         required: true,
     },
+    userful_count: {
+        type: Number,
+        required: false,
+        default: 0
+    },
     product: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -52,6 +57,10 @@ reviewSchema.methods = {
             ...view
             // add properties for a full view
         } : view
+    },
+    add_useful(number) {
+        this.userful_count += number
+        this.save()
     }
 
 }

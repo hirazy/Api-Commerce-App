@@ -1,8 +1,9 @@
 import { sign } from '../../services/jwt'
 import { success } from '../../services/response/'
+import Otp, { schema } from '../otp/model'
 
 export const login = ({ user }, res, next) =>
-  sign(user.id)
+    sign(user.id)
     .then((token) => ({ token, user: user.view(true) }))
     .then(success(res, 201))
     .catch(next)

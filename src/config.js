@@ -26,11 +26,14 @@ const config = {
         port: process.env.PORT || 9000,
         ip: process.env.IP || '0.0.0.0',
         apiRoot: process.env.API_ROOT || '',
-        defaultEmail: 'no-reply@api-commerce.com',
+        defaultEmail: '1901040142@s.hanu.edu.vn',
         sendgridKey: requireProcessEnv('SENDGRID_KEY'),
         masterKey: requireProcessEnv('MASTER_KEY'),
         jwtSecret: requireProcessEnv('JWT_SECRET'),
         stripeKey: requireProcessEnv('STRIPE_KEY'),
+        twilioAccountSID: requireProcessEnv('TWILIO_ACCOUNT_SID'),
+        twilioAuthToken: requireProcessEnv('TWILIO_AUTH_TOKEN'),
+        passwordSecret: requireProcessEnv('PASSWORD_SECRET'),
         mongo: {
             options: {
                 useUnifiedTopology: true,

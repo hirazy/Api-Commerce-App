@@ -20,6 +20,8 @@ import follow from './follow'
 import message from './message'
 import timeline from './timeline'
 import resource from './resource'
+import room from './room'
+import otp from './otp'
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
@@ -74,5 +76,7 @@ router.use('/follows', follow)
 router.use('/messages', message)
 router.use('/timelines', timeline)
 router.use('/resources', resource)
+router.use('/rooms', room)
+router.use('/otps', otp)
 
 export default router
