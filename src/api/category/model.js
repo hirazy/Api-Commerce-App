@@ -20,6 +20,10 @@ const categorySchema = new Schema({
         required: true,
         default: 0
     },
+    colors: [{
+        type: String,
+        required: true
+    }],
     image: {
         type: Schema.Types.ObjectId,
         ref: "Image",

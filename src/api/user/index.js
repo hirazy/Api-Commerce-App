@@ -80,7 +80,7 @@ router.get('/phone/:phone',
  */
 router.post('/',
     master(),
-    body({ email, password, phone, name, picture }),
+    body({ email, phone, password }),
     create)
 
 /**
@@ -153,6 +153,7 @@ router.put('/:id/password',
  * @apiError 404 User not found.
  */
 router.delete('/:id',
+    master(),
     token({ required: true, roles: ['admin'] }),
     destroy)
 

@@ -6,6 +6,8 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
 import { jwtSecret, masterKey } from '../../config'
 import User, { schema } from '../../api/user/model'
+import isEmail from 'validator/lib/isEmail';
+import isMobilePhone from 'validator/lib/isMobilePhone';
 
 export const password = () => (req, res, next) =>
     passport.authenticate('password', { session: false }, (err, user, info) => {
@@ -34,16 +36,27 @@ export const token = ({ required, roles = User.roles } = {}) => (req, res, next)
         })
     })(req, res, next)
 
-passport.use('password', new BasicStrategy((email, password, done) => {
-    const userSchema = new Schema({ email: schema.tree.email, password: schema.tree.password })
+passport.use('password', new BasicStrategy((emailOrPhone, password, done) => {
+    let userSchema = null
 
-    userSchema.validate({ email, password }, (err) => {
+    let checkEmail = isEmail(emailOrPhone)
+
+    // Validate Phone
+    if (checkEmail) {
+        userSchema = new Schema({ email: schema.tree.email, password: schema.tree.password })
+    } else {
+        userSchema = new Schema({ phone: schema.tree.phone, password: schema.tree.password })
+    }
+
+    userSchema.validate({ emailOrPhone, password }, (err) => {
         if (err) done(err)
     })
 
-    User.findOne({ email }).then((user) => {
+    let body = checkEmail ? { email: emailOrPhone } : { phone: emailOrPhone }
+
+    User.findOne(body).then((user) => {
         if (!user) {
-            done(true)
+            done(null)
             return null
         }
         return user.authenticate(password, user.password).then((user) => {

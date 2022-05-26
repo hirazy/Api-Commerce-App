@@ -3,31 +3,33 @@ import bcrypt from 'bcrypt'
 import mongoose, { Schema } from 'mongoose'
 import mongooseKeywords from 'mongoose-keywords'
 import { env } from '../../config'
-import { isEmail, isMobilePhone } from 'validator';
+import isEmail from 'validator/lib/isEmail';
+import isMobilePhone from 'validator/lib/isMobilePhone'
 
 const roles = ['user', 'admin']
 
 const userSchema = new Schema({
     email: {
         type: String,
-        match: /^\S+@\S+\.\S+$/,
+        // match: /^\S+@\S+\.\S+$/,
         required: false,
-        unique: true,
+        // unique: true,
         trim: true,
         lowercase: true,
-        validate: [isEmail, 'invalid email']
+        default: '',
     },
     facebook_username: {
         type: String,
         required: false,
-        unique: true,
+        // unique: true,
         trim: true,
-        validate: []
+        default: ''
+            // validate: []
     },
     password: {
         type: String,
         required: false,
-        minlength: 8,
+        minlength: [8, 'minimum 8 characters'],
         validate: []
     },
     name: {
@@ -43,8 +45,9 @@ const userSchema = new Schema({
         type: String,
         index: true,
         trim: true,
-        unique: true,
-        validate: [isMobilePhone]
+        // unique: true,
+        default: '',
+        // validate: [isMobilePhone]
     },
     dob: {
         type: Date,
@@ -106,14 +109,37 @@ userSchema.path('email').set(function(email) {
 })
 
 userSchema.path('phone').validate(function(phone) {
+    if (this.phone == '') {
+        return true
+    }
     return isMobilePhone(phone, "vi-VN")
 })
+
+userSchema.path('email').validate(function(email, next) {
+
+    if (this.email == '') {
+        return true
+    }
+
+    // if (this.isNew || this.isModified('email')) {
+    //     userSchema.findOne({ email: email }).exec(function(err, users) {
+    //         return !err && users.length === 0;
+    //     });
+    // } else return true;
+
+    return isEmail(email)
+        // if (this.isModified('email')) {
+        //     validate: [isEmail, 'invalid email']
+        //     return next()
+        // }
+}, 'Email already exists')
 
 /**
  * validateBeforeSave: false
  */
 
 userSchema.pre('save', function(next) {
+
     if (!this.isModified('password')) return next()
 
     /* istanbul ignore next */
@@ -140,13 +166,17 @@ userSchema.pre('deleteOne', function() {
 userSchema.methods = {
     view(full) {
         const view = {}
-        let fields = ['id', 'name', 'picture']
+        let fields = ['id', 'name', 'picture', 'email', 'phone']
 
         if (full) {
             fields = [...fields, 'email', 'createdAt']
         }
 
-        fields.forEach((field) => { view[field] = this[field] })
+        fields.forEach((field) => {
+            if (this[field] != '') {
+                view[field] = this[field]
+            }
+        })
 
         return view
     },

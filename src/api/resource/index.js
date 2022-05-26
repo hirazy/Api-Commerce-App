@@ -16,6 +16,7 @@ const router = new Router()
  */
 router.post('/',
     master(),
+    token({ required: true }),
     create)
 
 /**
@@ -27,6 +28,8 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
+    master(),
+    token({ required: true, roles: ['admin'] }),
     query(),
     index)
 
@@ -39,6 +42,8 @@ router.get('/',
  * @apiError 404 Resource not found.
  */
 router.get('/:id',
+    master(),
+    token({ required: true }),
     show)
 
 /**
@@ -50,6 +55,7 @@ router.get('/:id',
  * @apiError 404 Resource not found.
  */
 router.put('/:id',
+    master(),
     update)
 
 /**
@@ -60,6 +66,8 @@ router.put('/:id',
  * @apiError 404 Resource not found.
  */
 router.delete('/:id',
+    master(),
+    token({ required: true, roles: ['admin'] }),
     destroy)
 
 export default router

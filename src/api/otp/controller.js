@@ -15,7 +15,7 @@ export const createSms = ({ bodymen: { body: { phone } } }, res, next) =>
         const content = `
             Hirazy: KHONG CHIA SE OTP VOI BAT KY AI, bao gom ca nhan vien Hirazy. OTP: ${otp}. Tim hieu them tai: ...
         `
-        return sendSms({ body: content, from: '', to: '', otp: otp })
+        return sendSms({ body: content, from: '+19403988217', to: '+84397286900', otp: otp })
     })
     .then(([response]) => response ? res.status(response.statusCode).end() : null)
     .catch(next)
@@ -41,7 +41,7 @@ export const createEmail = ({ bodymen: { body: { email } } }, res, next) =>
                                     Chào bạn user,
                                     <br><br>
                                     <font style="font-weight:600;color:#f00">
-                                        LƯU Ý KHÔNG CHIA SẺ MÃ VỚI BẤT KỲ AI, kể cả nhân viên của Lazada!!! 
+                                        LƯU Ý KHÔNG CHIA SẺ MÃ VỚI BẤT KỲ AI, kể cả nhân viên của Hirazy!!! 
                                     </font>
                                     <br>Để hoàn thành yêu cầu của bạn với Dang ky tai khoan Hirazy, vui lòng nhập mã gồm 6 chữ số trên Trang xác minh Email:  
                                 </font>
@@ -74,7 +74,7 @@ export const createEmail = ({ bodymen: { body: { email } } }, res, next) =>
             </tr>
         </tbody>
         `
-        return sendMail({ toEmail: email, subject: 'Xác nhận email của bạn', content })
+        return sendMail({ toEmail: email, subject: 'Xác nhận email của bạn', content: content })
     })
     .then(([response]) => response ? res.status(response.statusCode).end() : null)
     .catch(next)

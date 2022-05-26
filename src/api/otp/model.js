@@ -43,9 +43,8 @@ otpSchema.methods = {
             // add properties for a full view
         } : view
     },
-
     verifyOtp(otp) {
-        return this.otp === otp
+        return this.otp == otp
     }
 }
 

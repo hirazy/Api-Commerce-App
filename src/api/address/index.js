@@ -16,6 +16,7 @@ const router = new Router()
  */
 router.post('/',
     master(),
+    token({ required: true }),
     create)
 
 /**
