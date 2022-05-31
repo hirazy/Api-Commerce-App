@@ -17,7 +17,7 @@ const otpSchema = new Schema({
         required: false,
         length: 6,
         trim: true,
-        default: () => uid(6, '0-9')
+        default: () => uid(6, 'numeric')
     },
     /**
      * Expire 15 minutes for user

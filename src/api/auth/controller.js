@@ -20,19 +20,19 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
 
     if (email != null) {
         checkEmail = isEmail(email)
-    }
-
-    if (phone != null) {
-        checkPhone = isMobilePhone(phone)
+    } else {
+        if (phone != null) {
+            checkPhone = isMobilePhone(phone)
+        }
     }
 
     if (!checkEmail && !checkPhone) {
         res.status(400).json({
-            error: "Input is valid!"
+            code: 400,
+            status: "Input is valid!"
         })
         return;
     }
-
 
     // Validate Email
     // if (checkEmail) {
@@ -47,7 +47,8 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
 
         if (!otpSchema) {
             res.status(404).json({
-                error: `Not found OTP with ${isEmail ? 'Email': 'Phone'}`
+                code: 404,
+                status: `Not found OTP with ${isEmail ? 'Email': 'Phone'} or OTP is expire`
             })
             return;
         }
@@ -56,7 +57,8 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
 
         if (!verifyOtp) {
             res.status(400).json({
-                error: "Otp is wrong!"
+                code: 400,
+                status: "Otp is wrong!"
             })
             return;
         }
@@ -64,13 +66,15 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
 
         User.findOne(bodyOtp).then((user) => {
             /**
-             * User not be created
+             * @apiStatus 200 
+             * User not be created => Sign up
              */
             if (!user) {
                 success(res, 200)
             } else {
 
                 /**
+                 * @apiStatus 201
                  * User created and Sign to send Token to user
                  */
                 sign(user.id)

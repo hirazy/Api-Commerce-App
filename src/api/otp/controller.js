@@ -2,23 +2,38 @@ import { success, notFound } from '../../services/response/'
 import { sendSms } from '../../services/sms'
 import { sendMail } from '../../services/sendgrid'
 import Otp, { schema } from './model'
+import isEmail from 'validator/lib/isEmail';
+import isMobilePhone from 'validator/lib/isMobilePhone';
 
-export const createSms = ({ bodymen: { body: { phone } } }, res, next) =>
+export const createSms = ({ bodymen: { body: { phone } } }, res, next) => {
+    if (!isMobilePhone(phone)) {
+        res.status(400).json({
+            code: 400,
+            "status": "Please enter valid phone number."
+        })
+        return;
+    }
+
     Otp.findOne({ phone })
-    //.then(notFound(res))
-    .then((otp) => otp ? otp : Otp.create({ phone }))
-    .then((reset) => {
-        if (!reset) return null
-        const { phone, otp } = reset
-        // link = `${link.replace(/\/$/, '')}/${token}`
-        // link = ''
-        const content = `
+        //.then(notFound(res))
+        .then((otp) => otp ? otp : Otp.create({ phone }))
+        .then((reset) => {
+            if (!reset) return null
+            const { phone, otp } = reset
+
+            console.log('Phone ' + phone)
+
+            // link = `${link.replace(/\/$/, '')}/${token}`
+            // link = ''
+            const content = `
             Hirazy: KHONG CHIA SE OTP VOI BAT KY AI, bao gom ca nhan vien Hirazy. OTP: ${otp}. Tim hieu them tai: ...
         `
-        return sendSms({ body: content, from: '+19403988217', to: '+84397286900', otp: otp })
-    })
-    .then(([response]) => response ? res.status(response.statusCode).end() : null)
-    .catch(next)
+            return sendSms({ body: content, from: '+19403988217', to: phone, otp: otp })
+        })
+        .then((response) => response ? res.status(200).json({ code: response.status, status: "Sent successfuly!" }).end() : null)
+        .catch(next)
+}
+
 
 export const createEmail = ({ bodymen: { body: { email } } }, res, next) =>
     Otp.findOne({ email })
@@ -76,7 +91,10 @@ export const createEmail = ({ bodymen: { body: { email } } }, res, next) =>
         `
         return sendMail({ toEmail: email, subject: 'Xác nhận email của bạn', content: content })
     })
-    .then(([response]) => response ? res.status(response.statusCode).end() : null)
+    .then(([response]) => response ? res.status(response.statusCode).json({
+        code: response.statusCode,
+        status: response.statusMessage
+    }).end() : null)
     .catch(next)
 
 

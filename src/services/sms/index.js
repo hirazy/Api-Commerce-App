@@ -15,8 +15,8 @@ export const sendSms = ({ body, from, to, otp }) => {
          */
     return client.messages
         .create(sms)
-        .then(message => console.log(message.sid))
-        .done()
+        // .then(message => console.log(message.sid))
+        // .done()
         // .then(message => console.log(message.sid))
         // .catch((err) => console.log(err));
 }

@@ -18,6 +18,23 @@ const orderSchema = new Schema({
     // sale_kind: {
     //     type: Boolean
     // },
+    items: [{
+        type: Schema.Types.ObjectId,
+        ref: 'OrderItem'
+    }],
+    phone: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    address: {
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: "Address",
+    },
     reference: {
         type: String,
         required: true
@@ -34,7 +51,7 @@ const orderSchema = new Schema({
     paidAt: {
         type: Date,
         required: true,
-        default: null
+        default: false
     }
 
 }, { timestamps: true })

@@ -90,6 +90,10 @@ const userSchema = new Schema({
     isActive: {
         type: Boolean,
         default: true,
+    },
+    device_token: {
+        type: String,
+        required: false
     }
 }, {
     timestamps: true

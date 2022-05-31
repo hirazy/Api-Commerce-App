@@ -20,6 +20,14 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
+export const searchByName = ({ params }, res, next) =>
+    Product.populate(
+        'name', params.name
+    )
+    .then(notFound(res))
+    .then((products) => products.map((product) => product.view()))
+    .catch(next)
+
 export const searchByKeyWord = ({ params }, res, next) =>
     Product.populate(
         'name', params.name

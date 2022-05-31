@@ -38,6 +38,7 @@ const addressSchema = new Schema({
     },
     postal_code: {
         type: String,
+        default: ''
     },
     zipCode: {
         type: String,

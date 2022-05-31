@@ -22,6 +22,8 @@ import timeline from './timeline'
 import resource from './resource'
 import room from './room'
 import otp from './otp'
+import payment from './payment'
+import orderItem from './order_item'
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
@@ -78,5 +80,7 @@ router.use('/timelines', timeline)
 router.use('/resources', resource)
 router.use('/rooms', room)
 router.use('/otps', otp)
+router.use('/payments', payment)
+router.use('/order_items', orderItem)
 
 export default router
