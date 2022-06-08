@@ -13,7 +13,7 @@ const userSchema = new Schema({
         type: String,
         // match: /^\S+@\S+\.\S+$/,
         required: false,
-        // unique: true,
+        unique: true,
         trim: true,
         lowercase: true,
         default: '',
@@ -21,7 +21,7 @@ const userSchema = new Schema({
     facebook_username: {
         type: String,
         required: false,
-        // unique: true,
+        unique: true,
         trim: true,
         default: ''
             // validate: []
@@ -45,7 +45,7 @@ const userSchema = new Schema({
         type: String,
         index: true,
         trim: true,
-        // unique: true,
+        unique: true,
         default: '',
         // validate: [isMobilePhone]
     },
@@ -91,9 +91,15 @@ const userSchema = new Schema({
         type: Boolean,
         default: true,
     },
+    product_Seen: [{
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "Product"
+    }],
     device_token: {
         type: String,
-        required: false
+        required: false,
+        default: ''
     }
 }, {
     timestamps: true

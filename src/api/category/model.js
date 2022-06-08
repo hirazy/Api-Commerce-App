@@ -29,7 +29,6 @@ const categorySchema = new Schema({
         ref: "Image",
         required: true
     }
-
 }, { timestamps: true })
 
 categorySchema.methods = {

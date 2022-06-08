@@ -18,6 +18,7 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
     let checkEmail = false
     let checkPhone = false
 
+    // Validate Email
     if (email != null) {
         checkEmail = isEmail(email)
     } else {
@@ -27,19 +28,13 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
     }
 
     if (!checkEmail && !checkPhone) {
+        console.log("Email or phone is unvalid!")
         res.status(400).json({
             code: 400,
             status: "Input is valid!"
         })
         return;
     }
-
-    // Validate Email
-    // if (checkEmail) {
-    //     otpSchema = new Schema({ email: schema.tree.email, otp: schema.tree.otp })
-    // } else {
-    //     otpSchema = new Schema({ phone: schema.tree.phone, otp: schema.tree.otp })
-    // }
 
     let bodyOtp = checkEmail ? { email: email } : { phone: phone }
 
@@ -52,6 +47,8 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
             })
             return;
         }
+
+        console.log("Otp " + otp)
 
         let verifyOtp = otpSchema.verifyOtp(otp)
 

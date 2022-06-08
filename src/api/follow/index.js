@@ -1,6 +1,8 @@
 import { Router } from 'express'
+import { middleware as body } from 'bodymen'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
+import { password as passwordAuth, master, token } from '../../services/passport'
 import Follow, { schema } from './model'
 
 const router = new Router()
@@ -14,6 +16,8 @@ const router = new Router()
  * @apiError 404 Follow not found.
  */
 router.post('/',
+    master(),
+    token({ required: true, roles: ['user', 'admin'] }),
     create)
 
 /**
@@ -25,6 +29,7 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
+    master(),
     query(),
     index)
 
@@ -37,6 +42,7 @@ router.get('/',
  * @apiError 404 Follow not found.
  */
 router.get('/:id',
+    master(),
     show)
 
 /**
@@ -48,6 +54,8 @@ router.get('/:id',
  * @apiError 404 Follow not found.
  */
 router.put('/:id',
+    master(),
+    token({ required: true, roles: ['user', 'admin'] }),
     update)
 
 /**
@@ -58,6 +66,8 @@ router.put('/:id',
  * @apiError 404 Follow not found.
  */
 router.delete('/:id',
+    master(),
+    token({ required: true, roles: ['admin'] }),
     destroy)
 
 export default router

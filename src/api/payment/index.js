@@ -20,6 +20,19 @@ router.post('/',
     create)
 
 /**
+ * @api {post} /payments Create payment
+ * @apiName CreatePayment
+ * @apiGroup Payment
+ * @apiSuccess {Object} payment Payment's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Payment not found.
+ */
+router.post('/momo',
+    master(),
+    token({ required: true, roles: ['user', 'admin'] }),
+    create)
+
+/**
  * @api {get} /payments Retrieve payments
  * @apiName RetrievePayments
  * @apiGroup Payment

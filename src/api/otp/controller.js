@@ -35,16 +35,25 @@ export const createSms = ({ bodymen: { body: { phone } } }, res, next) => {
 }
 
 
-export const createEmail = ({ bodymen: { body: { email } } }, res, next) =>
+export const createEmail = ({ bodymen: { body: { email } } }, res, next) => {
+
+    if (!isEmail(email)) {
+        res.status(400).json({
+            code: 400,
+            "status": "Please enter valid email."
+        })
+        return;
+    }
+
     Otp.findOne({ email })
-    // .then(notFound(res))
-    .then((otp) => otp ? otp : Otp.create({ email }))
-    .then((emailOtp) => {
-        if (!emailOtp) return null
-        const { email, otp } = emailOtp
-        // link = `${link.replace(/\/$/, '')}/${token}`
-        // link = ''
-        const content = `
+        // .then(notFound(res))
+        .then((otp) => otp ? otp : Otp.create({ email }))
+        .then((emailOtp) => {
+            if (!emailOtp) return null
+            const { email, otp } = emailOtp
+            // link = `${link.replace(/\/$/, '')}/${token}`
+            // link = ''
+            const content = `
         <tbody>
             <tr>
                 <td valign="top" align="center" style="padding-top:15px;padding-bottom:15px">
@@ -89,13 +98,15 @@ export const createEmail = ({ bodymen: { body: { email } } }, res, next) =>
             </tr>
         </tbody>
         `
-        return sendMail({ toEmail: email, subject: 'Xác nhận email của bạn', content: content })
-    })
-    .then(([response]) => response ? res.status(response.statusCode).json({
-        code: response.statusCode,
-        status: response.statusMessage
-    }).end() : null)
-    .catch(next)
+            return sendMail({ toEmail: email, subject: 'Xác nhận email của bạn', content: content })
+        })
+        .then(([response]) => response ? res.status(response.statusCode).json({
+            code: response.statusCode,
+            status: response.statusMessage
+        }).end() : null)
+        .catch(next)
+}
+
 
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 import { uid } from 'rand-token'
+import randomstring from "randomstring"
 
 const otpSchema = new Schema({
     email: {
@@ -17,7 +18,7 @@ const otpSchema = new Schema({
         required: false,
         length: 6,
         trim: true,
-        default: () => uid(6, 'numeric')
+        default: () => randomstring.generate({ length: 6, charset: 'numeric' })
     },
     /**
      * Expire 15 minutes for user

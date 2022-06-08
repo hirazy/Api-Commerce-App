@@ -18,4 +18,22 @@ setImmediate(() => {
     })
 })
 
+// IO
+const io = require("socket.io")(server);
+
+// Authentication Socket
+io.use(function(socket, next) {
+    var token = socket.request.query.token;
+    checkAuthToken(token, function(err, authorized) {
+        if (err || !authorized) {
+            next(new Error("not authorized"));
+        }
+        next();
+    });
+});
+
+io.on('connection', function(socket) {
+    
+})
+
 export default app

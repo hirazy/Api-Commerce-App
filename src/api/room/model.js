@@ -15,7 +15,11 @@ const roomSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'Message'
-    }]
+    }],
+    name: {
+        type: String,
+        required: false
+    }
 }, { timestamps: true })
 
 roomSchema.methods = {

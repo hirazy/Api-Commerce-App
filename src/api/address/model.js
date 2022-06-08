@@ -52,7 +52,6 @@ const addressSchema = new Schema({
         type: String,
         required: true
     },
-
     /**
      * Home or Company
      */

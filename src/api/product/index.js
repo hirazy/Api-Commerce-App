@@ -29,6 +29,8 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
+    master(),
+    token({ required: true, roles: ['admin'] }),
     query(),
     index)
 
@@ -41,6 +43,8 @@ router.get('/',
  * @apiError 404 Product not found.
  */
 router.get('/:id',
+    master(),
+    token({ required: false }),
     show)
 
 /**
