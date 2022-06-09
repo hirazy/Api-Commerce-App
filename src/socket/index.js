@@ -11,6 +11,7 @@ const onConnection = (io) => (socket) => {
      */
     io.use(function(socket, next) {
         var token = socket.request.query.token;
+
         checkAuthToken(token, function(err, authorized) {
             if (err || !authorized) {
                 next(new Error("not authorized"));

@@ -12,7 +12,10 @@ const firebaseConfig = {
  * Create FCM Queue Bull from Global FCM
  */
 const fcmQueue = new Queue(
-    'fcm',
+    'fcm', {
+        redis: {}
+    }
+
 )
 
 fcmQueue.process((job, done) => {
