@@ -20,6 +20,7 @@ const { email, password, phone, name, picture } = schema.tree
  * @apiError 401 Admin access only.
  */
 router.get('/',
+    master(),
     token({ required: true, roles: ['admin'] }),
     query(),
     index)

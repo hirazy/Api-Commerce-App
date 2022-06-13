@@ -2,7 +2,10 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
 import { master, token } from '../../services/passport'
+import { middleware as body } from 'bodymen'
 import Resource, { schema } from './model'
+
+const { key, resourceType } = schema.tree
 
 const router = new Router()
 
@@ -16,7 +19,8 @@ const router = new Router()
  */
 router.post('/',
     master(),
-    token({ required: true }),
+    token({ required: true, roles: ["user", "admin"] }),
+    body({ key, resourceType }),
     create)
 
 /**

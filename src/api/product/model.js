@@ -3,7 +3,9 @@ import mongoose, { Schema, SchemaTypes } from 'mongoose'
 const productSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        default: 'Shop',
+        minlength: 4,
     },
     shop: {
         type: Schema.Types.ObjectId,
@@ -11,13 +13,24 @@ const productSchema = new Schema({
         required: true
     },
     image: {
-        type: String,
+        ref: "Resource",
+        type: Schema.Types.ObjectId,
         required: true
     },
     images: [{
-        type: String,
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'Resource'
     }],
-    prices: [{
+    colors: [{
+        type: String,
+        required: true
+    }],
+    sizes: [{
+        type: String,
+        required: true
+    }],
+    priceColors: [{
 
     }],
     favorite: [{
@@ -66,8 +79,7 @@ const productSchema = new Schema({
 
 }, { timestamps: true })
 
-productSchema.virtual('avarageRating').
-get(function() {
+productSchema.virtual('avarageRating').get(function() {
     let rating = 0
     if (this.reviews.length == 0) {
         rating = 0
@@ -78,6 +90,8 @@ get(function() {
 
     return rating / this.reviews.length
 })
+
+productSchema.get
 
 productSchema.methods = {
     view(full) {

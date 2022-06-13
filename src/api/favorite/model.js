@@ -1,35 +1,20 @@
 import mongoose, { Schema } from 'mongoose'
 
-const creditCardSchema = new Schema({
+const favoriteSchema = new Schema({
+    product: {
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
+    },
     user: {
         required: true,
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: 'User'
     },
-    card: {
-        type: String,
-        required: true
-    },
-    payment_type: {
-        type: String
-    },
-    expiry: {
-        type: Date,
-        default: Date.now,
-        expires: 3600
-    },
-    account_no: {
-        trim: true,
-        type: String,
-        default: "",
-        trim: true
-    },
-    provider: {
 
-    }
 }, { timestamps: true })
 
-creditCardSchema.methods = {
+favoriteSchema.methods = {
     view(full) {
         const view = {
             // simple view
@@ -45,7 +30,7 @@ creditCardSchema.methods = {
     }
 }
 
-const model = mongoose.model('CreditCard', creditCardSchema)
+const model = mongoose.model('Favorite', favoriteSchema)
 
 export const schema = model.schema
 export default model

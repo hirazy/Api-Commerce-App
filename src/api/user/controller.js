@@ -1,6 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import User, { schema } from './model'
 import { sign } from '../../services/jwt'
+// import { client } from '../../services/redis'
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     User.count(query)
@@ -20,8 +21,10 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const showMe = ({ user }, res) =>
+export const showMe = ({ user }, res) => {
     res.json(user.view(true))
+}
+
 
 export const checkPhoneNumber = ({ phone }, res) => {
     // User.find({ phone: phone })
@@ -67,6 +70,11 @@ export const createByEmail = ({ bodymen: { body } }, res, next) =>
             next(err)
         }
     })
+
+export const respect = ({}, res, next) => {
+
+}
+
 
 export const update = ({ bodymen: { body }, params, user }, res, next) =>
     User.findById(params.id === 'me' ? user.id : params.id)

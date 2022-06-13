@@ -1,35 +1,21 @@
 import mongoose, { Schema } from 'mongoose'
 
-const creditCardSchema = new Schema({
-    user: {
-        required: true,
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    },
-    card: {
+const deviceSchema = new Schema({
+    name: {
         type: String,
         required: true
     },
-    payment_type: {
-        type: String
-    },
-    expiry: {
-        type: Date,
-        default: Date.now,
-        expires: 3600
-    },
-    account_no: {
-        trim: true,
+    os: {
         type: String,
-        default: "",
-        trim: true
+        enum: ["Window", "macOS", "iOS", "Android"]
     },
-    provider: {
-
+    token: {
+        type: String,
+        default: ""
     }
 }, { timestamps: true })
 
-creditCardSchema.methods = {
+deviceSchema.methods = {
     view(full) {
         const view = {
             // simple view
@@ -45,7 +31,7 @@ creditCardSchema.methods = {
     }
 }
 
-const model = mongoose.model('CreditCard', creditCardSchema)
+const model = mongoose.model('Device', deviceSchema)
 
 export const schema = model.schema
 export default model

@@ -47,7 +47,8 @@ const userSchema = new Schema({
         trim: true,
         unique: true,
         default: '',
-        // validate: [isMobilePhone]
+        dropDups: true
+            // validate: [isMobilePhone]
     },
     dob: {
         type: Date,

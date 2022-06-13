@@ -16,7 +16,7 @@ const router = new Router()
  */
 router.post('/',
     master(),
-    token({ required: true }),
+    token({ required: true, roles: ["admin"] }),
     create)
 
 /**
@@ -28,8 +28,9 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-    query(),
     master(),
+    token({ required: true, roles: ["admin"] }),
+    query(),
     index)
 
 /**

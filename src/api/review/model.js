@@ -1,11 +1,16 @@
 import mongoose, { Schema } from 'mongoose'
 
 const reviewSchema = new Schema({
-    user: {
+    reviewer: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
+    respecter: [{
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User"
+    }],
     name: {
         type: String,
         required: true

@@ -1,11 +1,15 @@
 import mongoose, { Schema } from 'mongoose'
 
 const resourceSchema = new Schema({
+    /**
+     * Require key not null
+     */
     key: {
         type: String,
-        required: true
+        required: true,
+        default: ''
     },
-    resourceType: {
+    type: {
         type: String,
         enum: ['IMAGE', 'AUDIO', 'VIDEO'],
         default: 'IMAGE'
@@ -22,8 +26,9 @@ resourceSchema.methods = {
         }
 
         return full ? {
-            ...view
-            // add properties for a full view
+            ...view,
+            key: this.key,
+            type: this.type
         } : view
     }
 }

@@ -46,19 +46,20 @@ const shopSchema = new Schema({
         type: Number,
         default: 0,
     },
-    follow: {
-        type: Number,
-        default: 0
-    },
-
+    follow: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Follow'
+    }]
 }, { timestamps: true })
+
+shopSchema.path('name').validate((name) => {
+
+})
 
 shopSchema.pre('save', function(next) {
     if (!this.isModified('password')) return next()
 
-    const newPassword = CryptoJS.AES.encrypt(this.password,
-
-    )
+    const newPassword = CryptoJS.AES.encrypt(this.password)
 })
 
 shopSchema.methods = {

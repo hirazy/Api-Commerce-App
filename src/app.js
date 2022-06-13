@@ -3,9 +3,16 @@ import { env, mongo, port, ip, apiRoot } from './config'
 import mongoose from './services/mongoose'
 import express from './services/express'
 import api from './api'
+// import { client } from '../src/services/redis'
 
 const app = express(apiRoot, api)
 const server = http.createServer(app)
+
+// const client = redis.createClient(3000)
+
+// client.on('error', (err) => {
+//     console.log("Error " + err)
+// });
 
 if (mongo.uri) {
     mongoose.connect(mongo.uri)
@@ -16,6 +23,16 @@ setImmediate(() => {
     server.listen(port, ip, () => {
         console.log('Express server listening on http://%s:%d, in %s mode', ip, port, env)
     })
+})
+
+app.get('/', async(req, res) => {
+    await client.connect()
+
+    console.log("Hehe " + await client.get("name"))
+
+    // if (await client.get("name")) {
+
+    // }
 })
 
 // IO
@@ -33,7 +50,7 @@ io.use(function(socket, next) {
 });
 
 io.on('connection', function(socket) {
-    
+
 })
 
 export default app
