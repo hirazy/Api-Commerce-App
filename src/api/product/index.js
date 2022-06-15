@@ -56,6 +56,7 @@ router.get('/:id',
  * @apiError 404 Product not found.
  */
 router.get('/search:name',
+    master(),
     searchByKeyWord)
 
 /**
@@ -67,6 +68,34 @@ router.get('/search:name',
  * @apiError 404 Product not found.
  */
 router.get('/:id',
+    master(),
+    show)
+
+
+/**
+ * @api {get} /products/:id Retrieve product of authentication me
+ * @apiName RetrieveProduct
+ * @apiGroup Product
+ * @apiSuccess {Object} product Product's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Product not found.
+ */
+router.get('/home',
+    master(),
+    token({ required: true, roles: ["user"] }),
+    show)
+
+/**
+ * @api {get} /products/:id Retrieve product of authentication me
+ * @apiName RetrieveProduct
+ * @apiGroup Product
+ * @apiSuccess {Object} product Product's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Product not found.
+ */
+router.get('/me',
+    master(),
+    token({ required: true, roles: ["user"] }),
     show)
 
 /**

@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
 
+const DEVICE_TYPES = ['MIA1', 'SSS9', 'PX3', 'PX3A', 'SSS7']
+
 const deviceSchema = new Schema({
     name: {
         type: String,
@@ -12,6 +14,18 @@ const deviceSchema = new Schema({
     token: {
         type: String,
         default: ""
+    },
+    serial: {
+        type: String,
+        required: true
+    },
+    lastIpAddress: {
+        type: String,
+        required: true
+    },
+    lastOnlineAt: {
+        type: Date,
+        default: new Date()
     }
 }, { timestamps: true })
 

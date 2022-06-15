@@ -34,6 +34,7 @@ router.get('/',
  * @apiSuccess {Object} user User's data.
  */
 router.get('/me',
+    master(),
     token({ required: true }),
     showMe)
 

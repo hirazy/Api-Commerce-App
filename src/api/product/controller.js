@@ -1,5 +1,8 @@
 import { success, notFound } from '../../services/response/'
 import Product, { schema } from './model'
+import JSZip from 'jszip'
+
+const zip = JSZip()
 
 export const create = ({ body }, res, next) =>
     Product.create(body)
@@ -35,6 +38,21 @@ export const searchByKeyWord = ({ params }, res, next) =>
     .then(notFound(res))
     .then((products) => products.map((product) => product.view()))
     .catch(next)
+
+export const getAuthenticationProducts = () => {
+    // zip.x
+    const zipData = zip.file('data_home')
+
+    Product.populate("")
+        .find()
+}
+
+export const getByCategory = ({}, res, next) => {
+    // Product
+    //     .populate("category")
+    Product.populate("catrgory")
+        .find()
+}
 
 export const update = ({ body, params }, res, next) =>
     Product.findById(params.id)

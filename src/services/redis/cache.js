@@ -2,10 +2,12 @@ import { port, ip } from '../../config'
 
 const redis = require('redis')
 
-const client = redis.createClient(49153, "0.0.0.0");
+const client = redis.createClient({
+    port: 6379
+});
 
 client.on('error', (err) => console.log('Redis Client Error', err));
-// client.connect()
+client.connect()
 
 client.set('framework', 'ReactJS', function(err, reply) {
     console.log(reply); // OK

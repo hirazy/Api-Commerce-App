@@ -11,6 +11,16 @@ const reviewSchema = new Schema({
         required: true,
         ref: "User"
     }],
+    parent: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'Review'
+    },
+    children: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Review',
+        required: true
+    }],
     name: {
         type: String,
         required: true
@@ -45,8 +55,7 @@ const reviewSchema = new Schema({
             validator: Number.isInteger,
             message: '{VALUE} is not an integer value'
         }
-    },
-
+    }
 }, { timestamps: true })
 
 reviewSchema.methods = {
@@ -66,8 +75,10 @@ reviewSchema.methods = {
     add_useful(number) {
         this.userful_count += number
         this.save()
+    },
+    getChildren() {
+        return this.children
     }
-
 }
 
 const model = mongoose.model('Review', reviewSchema)

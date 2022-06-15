@@ -38,6 +38,11 @@ const shopSchema = new Schema({
         required: true,
         enum: []
     },
+    verified: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
     phone: {
         type: String,
         required: true,

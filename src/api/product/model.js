@@ -91,7 +91,7 @@ productSchema.virtual('avarageRating').get(function() {
     return rating / this.reviews.length
 })
 
-productSchema.get
+// productSchema.get()
 
 productSchema.methods = {
     view(full) {
