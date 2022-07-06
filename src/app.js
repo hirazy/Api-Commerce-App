@@ -29,10 +29,6 @@ app.get('/', async(req, res) => {
     await client.connect()
 
     console.log("Hehe " + await client.get("name"))
-
-    // if (await client.get("name")) {
-
-    // }
 })
 
 // IO

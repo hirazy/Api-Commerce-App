@@ -1,33 +1,28 @@
 import mongoose, { Schema } from 'mongoose'
 
-const shippingSchema = new Schema({
-    address: {
-        type: Schema.Types.ObjectId,
-        ref: "Address",
-        required: true
-    },
-    country: {
-        type: String,
-        required: true
-    },
-    timelines: [{
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Timeline"
-    }],
+const cartItemSchema = new Schema({
     product: {
         type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Product"
+        ref: "Product",
+        required: true
     },
     user: {
         type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    description: {
+        type: String,
         required: true,
-        ref: "User"
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        default: 1
     }
 }, { timestamps: true })
 
-shippingSchema.methods = {
+cartItemSchema.methods = {
     view(full) {
         const view = {
             // simple view
@@ -37,13 +32,13 @@ shippingSchema.methods = {
         }
 
         return full ? {
-            ...view,
+            ...view
             // add properties for a full view
         } : view
     }
 }
 
-const model = mongoose.model('Shipping', shippingSchema)
+const model = mongoose.model('CartItem', cartItemSchema)
 
 export const schema = model.schema
 export default model

@@ -30,7 +30,7 @@ export const createSms = ({ bodymen: { body: { phone } } }, res, next) => {
         `
             return sendSms({ body: content, from: '+19403988217', to: phone, otp: otp })
         })
-        .then((response) => response ? res.status(200).json({ code: response.status, status: "Sent successfuly!" }).end() : null)
+        .then((response) => response ? res.status(200).json({ code: 200, status: "Sent successfuly!" }).end() : null)
         .catch(next)
 }
 
@@ -101,7 +101,7 @@ export const createEmail = ({ bodymen: { body: { email } } }, res, next) => {
             return sendMail({ toEmail: email, subject: 'Xác nhận email của bạn', content: content })
         })
         .then(([response]) => response ? res.status(response.statusCode).json({
-            code: response.statusCode,
+            code: 200,
             status: response.statusMessage
         }).end() : null)
         .catch(next)

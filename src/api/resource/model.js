@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 
 const resourceSchema = new Schema({
     /**
-     * Require key not null
+     * Require key not null , save into google cloud storage
      */
     key: {
         type: String,

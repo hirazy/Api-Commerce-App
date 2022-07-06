@@ -15,7 +15,6 @@ const fcmQueue = new Queue(
     'fcm', {
         redis: {}
     }
-
 )
 
 fcmQueue.process((job, done) => {

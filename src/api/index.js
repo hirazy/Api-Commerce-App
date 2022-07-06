@@ -26,6 +26,7 @@ import payment from './payment'
 import orderItem from './order_item'
 import device from './device'
 import favorite from './favorite'
+import cartItem from './cart_item'
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
@@ -86,5 +87,6 @@ router.use('/payments', payment)
 router.use('/order_items', orderItem)
 router.use('/devices', device)
 router.use('/favorites', favorite)
+router.use('/cart_items', cartItem)
 
 export default router

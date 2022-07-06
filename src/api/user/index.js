@@ -128,6 +128,44 @@ router.put('/:id',
     update)
 
 /**
+ * @api {put} /users/:id Update user
+ * @apiName UpdateUser
+ * @apiGroup User
+ * @apiPermission user
+ * @apiParam {String} access_token User access_token.
+ * @apiParam {String} [name] User's name.
+ * @apiParam {String} [picture] User's picture.
+ * @apiSuccess {Object} user User's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 401 Current user or admin access only.
+ * @apiError 404 User not found.
+ */
+router.put('/:id/connectEmail',
+    master(),
+    token({ required: true }),
+    body({ name, picture }),
+    update)
+
+/**
+ * @api {put} /users/:id Update user
+ * @apiName UpdateUser
+ * @apiGroup User
+ * @apiPermission user
+ * @apiParam {String} access_token User access_token.
+ * @apiParam {String} [name] User's name.
+ * @apiParam {String} [picture] User's picture.
+ * @apiSuccess {Object} user User's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 401 Current user or admin access only.
+ * @apiError 404 User not found.
+ */
+router.put('/:id/connectFaceBook',
+    master(),
+    token({ required: true }),
+    body({ name, picture }),
+    update)
+
+/**
  * @api {put} /users/:id/password Update password
  * @apiName UpdatePassword
  * @apiGroup User

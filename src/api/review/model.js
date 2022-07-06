@@ -55,7 +55,11 @@ const reviewSchema = new Schema({
             validator: Number.isInteger,
             message: '{VALUE} is not an integer value'
         }
-    }
+    },
+    resources: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Resources'
+    }]
 }, { timestamps: true })
 
 reviewSchema.methods = {

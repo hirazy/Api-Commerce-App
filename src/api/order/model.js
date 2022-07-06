@@ -26,10 +26,6 @@ const orderSchema = new Schema({
         type: String,
         required: true,
     },
-    phone: {
-        type: String,
-        required: true
-    },
     address: {
         required: true,
         type: Schema.Types.ObjectId,
@@ -39,7 +35,7 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
-    totalPrice: {
+    totalCost: {
         type: Number,
         required: true
     },

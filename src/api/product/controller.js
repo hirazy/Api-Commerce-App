@@ -1,5 +1,6 @@
 import { success, notFound } from '../../services/response/'
-import Product, { schema } from './model'
+import Category, { categorySchema } from '../category/model'
+import Product, { productSchema } from './model'
 import JSZip from 'jszip'
 
 const zip = JSZip()
@@ -23,6 +24,19 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
+export const getHomeProduct = ({ params }, res, next) =>
+    Product.find()
+    .then(notFound(res))
+    .then((products) => products.map())
+
+
+export const getRandomProduct = ({ params }, res, next) =>
+    Product.aggregate([{ $sample: { size: 10 } }])
+    .then((products) => products.map((product) => product.view()))
+    .catch(next)
+    // Product.count()
+
+
 export const searchByName = ({ params }, res, next) =>
     Product.populate(
         'name', params.name
@@ -38,6 +52,11 @@ export const searchByKeyWord = ({ params }, res, next) =>
     .then(notFound(res))
     .then((products) => products.map((product) => product.view()))
     .catch(next)
+
+export const searchByCategory = ({ params }, res, next) =>
+    Product.populate(
+        'category'
+    )
 
 export const getAuthenticationProducts = () => {
     // zip.x

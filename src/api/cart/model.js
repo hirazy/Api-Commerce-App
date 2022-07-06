@@ -20,7 +20,6 @@ const cartSchema = new Schema({
         required: true,
         default: 1
     }
-
 }, { timestamps: true })
 
 cartSchema.methods = {

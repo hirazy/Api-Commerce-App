@@ -1,15 +1,15 @@
 import mongoose, { Schema } from 'mongoose'
 
 const messageSchema = new Schema({
-    user: {
+    sender: {
         ref: "User",
         type: Schema.Types.ObjectId,
-        required: false
+        required: true
     },
-    shop: {
-        ref: 'Shop',
+    room: {
+        ref: 'Room',
         type: Schema.Types.ObjectId,
-        required: false
+        required: true
     },
     resource: {
         type: Schema.Types.ObjectId,
@@ -32,13 +32,16 @@ messageSchema.methods = {
         const view = {
             // simple view
             id: this.id,
+            roomId: this.roomId,
+            content: this.content,
+            isResource: this.isResource,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         }
 
         return full ? {
             ...view
-            // add properties for a full view
+            // add properties for a full view   
         } : view
     }
 }

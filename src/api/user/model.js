@@ -65,8 +65,8 @@ const userSchema = new Schema({
         enum: ['Nam', 'Nữ', 'Khác']
     },
     payment: {
-        required: false
-
+        required: false,
+        type: String
     },
     respect: {
         type: Number,
@@ -77,7 +77,7 @@ const userSchema = new Schema({
     coupons: {},
     /**
      * @param role 
-     * @field ['user, 'admin]
+     * @field ['user', 'admin']
      */
     role: {
         type: String,
@@ -101,6 +101,10 @@ const userSchema = new Schema({
         type: String,
         required: false,
         default: ''
+    },
+    lastOnline: {
+        type: Date,
+        default: Date.now()
     }
 }, {
     timestamps: true
@@ -180,7 +184,7 @@ userSchema.methods = {
         let fields = ['id', 'name', 'picture', 'email', 'phone']
 
         if (full) {
-            fields = [...fields, 'email', 'createdAt']
+            fields = [...fields, 'createdAt']
         }
 
         fields.forEach((field) => {

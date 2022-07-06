@@ -15,20 +15,6 @@ const categorySchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     }],
-    price: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    colors: [{
-        type: String,
-        required: true
-    }],
-    image: {
-        type: Schema.Types.ObjectId,
-        ref: "Image",
-        required: true
-    }
 }, { timestamps: true })
 
 categorySchema.methods = {

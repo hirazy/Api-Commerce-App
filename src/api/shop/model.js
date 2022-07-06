@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 import { isEmail, isMobilePhone } from 'validator';
+import { passwordSecret } from '../../config'
 import CryptoJS from 'crypto-js'
 import crypto from 'crypto'
 
@@ -21,7 +22,7 @@ const shopSchema = new Schema({
     },
     products: [{
         type: Schema.Types.ObjectId,
-        ref: "Product"
+        ref: "Product",
     }],
     name: {
         type: String,
@@ -47,6 +48,15 @@ const shopSchema = new Schema({
         type: String,
         required: true,
     },
+    online: {
+        type: Date,
+        required: true,
+        default: Date.now()
+    },
+    picture: {
+        type: String,
+        required: true,
+    },
     rating: {
         type: Number,
         default: 0,
@@ -64,21 +74,40 @@ shopSchema.path('name').validate((name) => {
 shopSchema.pre('save', function(next) {
     if (!this.isModified('password')) return next()
 
-    const newPassword = CryptoJS.AES.encrypt(this.password)
+    const newPassword = CryptoJS.AES.encrypt(this.password, passwordSecret)
+
 })
 
 shopSchema.methods = {
+
+    viewProduct() {
+        const view = {
+            id: this.id,
+            name: this.name,
+            online: this.online,
+            picture: this.picture,
+            products: this.products,
+        }
+
+        return view
+    },
+
     view(full) {
         const view = {
             // simple view
             id: this.id,
+            name: this.name,
+            online: this.online,
+            picture: this.picture,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         }
 
         return full ? {
-            ...view
-            // add properties for a full view
+            ...view,
+            rating: this.rating,
+            products: this.products
+                // add properties for a full view
         } : view
     }
 }

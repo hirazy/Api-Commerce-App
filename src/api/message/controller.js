@@ -1,6 +1,6 @@
 import { success, notFound } from '../../services/response/'
 import { middleware as body } from 'bodymen'
-import { Message } from '.'
+import Message, { schema } from './model'
 
 export const create = ({ bodymen: body }, res, next) =>
     Message.create(body)

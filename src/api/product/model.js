@@ -22,17 +22,14 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Resource'
     }],
-    colors: [{
-        type: String,
-        required: true
-    }],
-    sizes: [{
-        type: String,
-        required: true
-    }],
-    priceColors: [{
-
-    }],
+    // colors: [{
+    //     type: String,
+    //     required: true
+    // }],
+    // sizes: [{
+    //     type: String,
+    //     required: true
+    // }],
     favorite: [{
         type: Schema.Types.ObjectId,
         ref: "User"
@@ -50,6 +47,9 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
+    /**
+     * File HTML of Resources
+     */
     description: {
         type: String,
         default: "",
@@ -68,6 +68,10 @@ const productSchema = new Schema({
         required: true,
         default: true
     },
+    // characteristics: [{
+    //     type: String,
+    //     default: ''
+    // }],
     reviews: [{
         type: Schema.Types.ObjectId,
         ref: 'Review'
@@ -76,7 +80,6 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Tag"
     }]
-
 }, { timestamps: true })
 
 productSchema.virtual('avarageRating').get(function() {
@@ -98,12 +101,21 @@ productSchema.methods = {
         const view = {
             // simple view
             id: this.id,
+            name: this.name,
+            price: this.price,
+            image: this.image,
+            rating: this.rating,
+            sold: this.sold,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         }
 
         return full ? {
-            ...view
+            ...view,
+            shop: this.shop,
+            category: this.category,
+            description: this.description,
+            tags: this.tags,
             // add properties for a full view
         } : view
     },

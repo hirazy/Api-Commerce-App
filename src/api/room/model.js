@@ -29,6 +29,7 @@ roomSchema.methods = {
             id: this.id,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
+            lastMessage: this.messages[this.messages.length - 1],
             user: this.user,
             shop: this.shop
         }

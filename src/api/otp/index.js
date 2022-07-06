@@ -33,8 +33,7 @@ router.post('/phone',
 router.post('/email',
     master(),
     body({ email }),
-    createEmail
-)
+    createEmail)
 
 /**
  * @api {get} /otps Retrieve otps

@@ -67,7 +67,11 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
              * User not be created => Sign up
              */
             if (!user) {
-                success(res, 200)
+                // success(res, 200)
+                res.status(200).json({
+                    code: 200,
+                    status: "Not Registered"
+                })
             } else {
 
                 /**
@@ -76,10 +80,79 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
                  */
                 sign(user.id)
                     .then((token) => ({ token, user: user.view(true) }))
-                    .then(success(res, 201))
+                    .then(
+
+                        //success(res, 201)
+                        (entity) => {
+                            if (entity) {
+                                res.status(201).json(entity)
+                            }
+                            return null
+                        }
+                    )
                     .catch(next)
             }
         })
     })
 
+}
+
+export const loginByEmail = ({ bodymen: { body: { email } } }, res, next) => {
+
+    const bodyEmail = { email: email }
+
+    User.findOne(bodyEmail).then((user) => {
+        /**
+         * @apiStatus 200 
+         * User not be created => Sign up
+         */
+        if (!user) {
+            console.log('Not Registered')
+                // success(res, 200)
+            res.status(200).json({
+                code: 200,
+                status: "Not Registered"
+            })
+        } else {
+            console.log('Registered')
+                /**
+                 * @apiStatus 201
+                 * User created and Sign to send Token to user
+                 */
+            sign(user.id)
+                .then((token) => ({ token, user: user.view(true) }))
+                .then((entity) => {
+                    if (entity) {
+                        res.status(201).json(entity)
+                    }
+                    return null
+                })
+                .catch(next)
+        }
+    })
+}
+
+export const loginByFaceBook = ({ bodymen: { body: { facebook_username } } }, res, next) => {
+
+    const bodyFaceBook = { facebook_username: facebook_username }
+
+    User.findOne(bodyFaceBook).then((user) => {
+        /**
+         * @apiStatus 200 
+         * User not be created => Sign up
+         */
+        if (!user) {
+            success(res, 200)
+        } else {
+
+            /**
+             * @apiStatus 201
+             * User created and Sign to send Token to user
+             */
+            sign(user.id)
+                .then((token) => ({ token, user: user.view(true) }))
+                .then(success(res, 201))
+                .catch(next)
+        }
+    })
 }

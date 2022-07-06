@@ -1,7 +1,11 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
+import { middleware as body } from 'bodymen'
+import { master } from '../../services/passport'
 import { create, index, show, update, destroy } from './controller'
 import Shop, { schema } from './model'
+
+const { email, password, name, picture } = schema.tree
 
 const router = new Router()
 
@@ -14,6 +18,7 @@ const router = new Router()
  * @apiError 404 Shop not found.
  */
 router.post('/',
+    master(),
     create)
 
 /**
@@ -25,6 +30,7 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
+    master(),
     query(),
     index)
 
@@ -37,6 +43,7 @@ router.get('/',
  * @apiError 404 Shop not found.
  */
 router.get('/:id',
+    master(),
     show)
 
 /**
