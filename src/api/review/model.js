@@ -1,43 +1,47 @@
 import mongoose, { Schema } from 'mongoose'
 
 const reviewSchema = new Schema({
-    reviewer: {
+    user: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
-    respecter: [{
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
-    }],
-    parent: {
-        type: Schema.Types.ObjectId,
-        required: false,
-        ref: 'Review'
-    },
-    children: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Review',
-        required: true
-    }],
+    // respecter: [{
+    //     type: Schema.Types.ObjectId,
+    //     required: true,
+    //     ref: "User"
+    // }],
+    // parent: {
+    //     type: Schema.Types.ObjectId,
+    //     required: false,
+    //     ref: 'Review'
+    // },
+    // children: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Review',
+    //     required: true
+    // }],
     name: {
         type: String,
         required: true
     },
     attended: {
+        type: Date,
+        required: true,
+    },
+    // count_review: {
+    //     type: Number,
+    //     required: true,
+    // },
+    // userful_count: {
+    //     type: Number,
+    //     required: false,
+    //     default: 0
+    // },
+    images: [{
         type: String,
-        required: true,
-    },
-    count_review: {
-        type: Number,
-        required: true,
-    },
-    userful_count: {
-        type: Number,
-        required: false,
-        default: 0
-    },
+        required: true
+    }],
     product: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -54,12 +58,14 @@ const reviewSchema = new Schema({
         validate: {
             validator: Number.isInteger,
             message: '{VALUE} is not an integer value'
-        }
+        },
+        min: 0,
+        max: 5
     },
-    resources: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Resources'
-    }]
+    // resources: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Resources'
+    // }]
 }, { timestamps: true })
 
 reviewSchema.methods = {

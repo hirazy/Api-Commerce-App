@@ -1,11 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
 const orderSchema = new Schema({
-    total_amount: {
-        required: true,
-        type: Number,
-        validate: []
-    },
     user: {
         type: Schema.Types.ObjectId,
         required: true
@@ -15,17 +10,14 @@ const orderSchema = new Schema({
         required: false,
         trim: true
     },
-    // sale_kind: {
-    //     type: Boolean
-    // },
     items: [{
         type: Schema.Types.ObjectId,
         ref: 'OrderItem'
     }],
-    phone: {
-        type: String,
-        required: true,
-    },
+    // phone: {
+    //     type: String,
+    //     required: true,
+    // },
     address: {
         required: true,
         type: Schema.Types.ObjectId,
@@ -49,7 +41,6 @@ const orderSchema = new Schema({
         required: true,
         default: false
     }
-
 }, { timestamps: true })
 
 orderSchema.methods = {

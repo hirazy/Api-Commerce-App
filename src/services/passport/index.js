@@ -12,12 +12,21 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 export const password = () => (req, res, next) =>
     passport.authenticate('password', { session: false }, (err, user, info) => {
         if (err && err.param) {
-            return res.status(400).json(err)
+            return res.status(400).json({
+                code: 400,
+                status: JSON.stringify(err)
+            })
         } else if (err || !user) {
-            return res.status(401).end()
+            return res.status(401).json({
+                code: 401,
+                status: 'Not Found'
+            }).end()
         }
         req.logIn(user, { session: false }, (err) => {
-            if (err) return res.status(401).end()
+            if (err) return res.status(401).json({
+                code: 401,
+                status: 'Not Found'
+            }).end()
             next()
         })
     })(req, res, next)

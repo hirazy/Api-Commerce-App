@@ -1,11 +1,13 @@
 import mongoose, { Schema, SchemaTypes } from 'mongoose'
+var random = require('mongoose-simple-random');
 
 const productSchema = new Schema({
     name: {
         type: String,
         required: true,
-        default: 'Shop',
+        default: 'Product',
         minlength: 4,
+        unique: true,
     },
     shop: {
         type: Schema.Types.ObjectId,
@@ -13,14 +15,14 @@ const productSchema = new Schema({
         required: true
     },
     image: {
-        ref: "Resource",
-        type: Schema.Types.ObjectId,
+        // ref: "Resource",
+        // type: Schema.Types.ObjectId,
+        type: String,
         required: true
     },
     images: [{
         required: true,
-        type: Schema.Types.ObjectId,
-        ref: 'Resource'
+        type: String
     }],
     // colors: [{
     //     type: String,
@@ -30,27 +32,38 @@ const productSchema = new Schema({
     //     type: String,
     //     required: true
     // }],
-    favorite: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }],
+    // favorite: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: "User"
+    // }],
+    rating: {
+        type: Number,
+        required: true,
+        default: 4.5
+    },
+    price: {
+        type: Number,
+        required: true
+    },
     sold: {
         required: false,
         type: Number,
         default: 0
     },
     quantity: {
+        required: false,
         type: Number,
         default: 0
     },
     slug: {
         type: String,
-        required: true,
+        required: false,
     },
     /**
      * File HTML of Resources
      */
     description: {
+        required: false,
         type: String,
         default: "",
         trim: true
@@ -59,27 +72,33 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Category"
     }],
-    images: [{
-        type: Schema.Types.ObjectId,
-        ref: "Image"
-    }],
     available: {
         type: Boolean,
-        required: true,
+        required: false,
         default: true
     },
+    favorites: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    reviews: {
+        type: Number,
+        default: 0,
+        required: false
+    }
     // characteristics: [{
     //     type: String,
     //     default: ''
     // }],
-    reviews: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Review'
-    }],
-    tags: [{
-        type: Schema.Types.ObjectId,
-        ref: "Tag"
-    }]
+    // reviews: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Review'
+    // }],
+    // tags: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Tag"
+    // }]
 }, { timestamps: true })
 
 productSchema.virtual('avarageRating').get(function() {
@@ -97,6 +116,14 @@ productSchema.virtual('avarageRating').get(function() {
 // productSchema.get()
 
 productSchema.methods = {
+    viewCart() {
+        const view = {
+            id: this.id,
+            name: this.name,
+            image: this.image
+        }
+        return view
+    },
     view(full) {
         const view = {
             // simple view
@@ -106,25 +133,31 @@ productSchema.methods = {
             image: this.image,
             rating: this.rating,
             sold: this.sold,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            reviews: this.reviews
         }
 
         return full ? {
             ...view,
+            images: this.images,
             shop: this.shop,
             category: this.category,
             description: this.description,
             tags: this.tags,
-            // add properties for a full view
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+                // add properties for a full view
         } : view
     },
-
+    getPrice() {
+        return this.price
+    },
     addSold(number) {
         this.sold += number
         this.save()
     }
 }
+
+productSchema.plugin(random)
 
 const model = mongoose.model('Product', productSchema)
 

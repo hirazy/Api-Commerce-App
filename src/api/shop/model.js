@@ -11,34 +11,35 @@ const shopSchema = new Schema({
         required: false,
         unique: true,
         trim: true,
-        lowercase: true,
-        validate: [isEmail, 'invalid email']
+        // lowercase: true,
+        // validate: [isEmail, 'invalid email']
     },
     password: {
         type: String,
-        required: false,
-        minlength: 8,
+        required: true,
+        minlength: 6,
         validate: []
     },
-    products: [{
-        type: Schema.Types.ObjectId,
-        ref: "Product",
-    }],
     name: {
         type: String,
         required: true,
+        unique: true,
         default: ''
     },
-    main_industry: {
-        type: String,
-        required: true,
-        default: ''
-    },
+    // main_industry: {
+    //     type: String,
+    //     required: true,
+    //     default: ''
+    // },
     country: {
         type: String,
-        required: true,
-        enum: []
+        required: false,
+        default: 'vi',
     },
+    categories: [{
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+    }],
     verified: {
         type: Boolean,
         required: false,
@@ -50,32 +51,52 @@ const shopSchema = new Schema({
     },
     online: {
         type: Date,
-        required: true,
+        // required: true,
         default: Date.now()
     },
     picture: {
         type: String,
         required: true,
     },
+    followers: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    reviews: {
+        type: Number,
+        required: false,
+        default: 0
+    },
     rating: {
         type: Number,
-        default: 0,
+        default: 5,
+        required: false
     },
-    follow: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Follow'
-    }]
+    image: {
+        type: String,
+        required: true,
+    },
+    images: [{
+            type: String,
+        }]
+        // follow: [{
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'Follow'
+        // }]
 }, { timestamps: true })
 
-shopSchema.path('name').validate((name) => {
+// shopSchema.path('name').validate((name) => {
 
-})
+// })
 
 shopSchema.pre('save', function(next) {
     if (!this.isModified('password')) return next()
 
-    const newPassword = CryptoJS.AES.encrypt(this.password, passwordSecret)
+    const encryptPassword = CryptoJS.AES.encrypt(this.password, passwordSecret)
 
+    this.password = encryptPassword
+    next()
 })
 
 shopSchema.methods = {
@@ -86,6 +107,7 @@ shopSchema.methods = {
             name: this.name,
             online: this.online,
             picture: this.picture,
+            rating: this.rating,
             products: this.products,
         }
 
@@ -105,8 +127,10 @@ shopSchema.methods = {
 
         return full ? {
             ...view,
+            image: this.image,
+            followers: this.followers,
             rating: this.rating,
-            products: this.products
+            images: this.images
                 // add properties for a full view
         } : view
     }

@@ -29,7 +29,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: false,
-        minlength: [8, 'minimum 8 characters'],
+        minlength: [6, 'minimum 6 characters'],
         validate: []
     },
     name: {
@@ -54,11 +54,11 @@ const userSchema = new Schema({
         type: Date,
         required: false
     },
-    address: [{
-        type: Schema.Types.ObjectId,
-        ref: "Address",
-        required: false
-    }],
+    // address: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Address",
+    //     required: false
+    // }],
     gender: {
         required: false,
         type: String,
@@ -74,7 +74,7 @@ const userSchema = new Schema({
         max: 5,
         min: 1
     },
-    coupons: {},
+    // coupons: {},
     /**
      * @param role 
      * @field ['user', 'admin']

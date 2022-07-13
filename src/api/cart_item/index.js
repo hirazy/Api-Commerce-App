@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
+import { master } from '../../services/passport'
 import { create, index, show, update, destroy } from './controller'
-export CartItem, { schema } from './model'
+import CartItem, { schema } from './model'
 
 const router = new Router()
 
@@ -14,7 +15,20 @@ const router = new Router()
  * @apiError 404 Cart item not found.
  */
 router.post('/',
-  create)
+    create)
+
+/**
+ * @api {get} /cart_items Retrieve cart items
+ * @apiName RetrieveCartItems
+ * @apiGroup CartItem
+ * @apiUse listParams
+ * @apiSuccess {Object[]} cartItems List of cart items.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/user/:id',
+    master(),
+    query(),
+    index)
 
 /**
  * @api {get} /cart_items Retrieve cart items
@@ -25,8 +39,8 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-  query(),
-  index)
+    query(),
+    index)
 
 /**
  * @api {get} /cart_items/:id Retrieve cart item
@@ -37,7 +51,7 @@ router.get('/',
  * @apiError 404 Cart item not found.
  */
 router.get('/:id',
-  show)
+    show)
 
 /**
  * @api {put} /cart_items/:id Update cart item
@@ -48,7 +62,7 @@ router.get('/:id',
  * @apiError 404 Cart item not found.
  */
 router.put('/:id',
-  update)
+    update)
 
 /**
  * @api {delete} /cart_items/:id Delete cart item
@@ -58,6 +72,6 @@ router.put('/:id',
  * @apiError 404 Cart item not found.
  */
 router.delete('/:id',
-  destroy)
+    destroy)
 
 export default router

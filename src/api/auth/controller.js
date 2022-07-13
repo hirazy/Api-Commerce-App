@@ -9,7 +9,16 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 export const login = ({ user }, res, next) =>
     sign(user.id)
     .then((token) => ({ token, user: user.view(true) }))
-    .then(success(res, 201))
+    .then(
+        // success(res, 201)
+        (entity) => {
+            res.status(201).json({
+                code: 201,
+                status: 'Login Successfully',
+                data: entity
+            })
+        }
+    )
     .catch(next)
 
 export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, next) => {
@@ -85,7 +94,11 @@ export const loginByOtp = ({ bodymen: { body: { email, phone, otp } } }, res, ne
                         //success(res, 201)
                         (entity) => {
                             if (entity) {
-                                res.status(201).json(entity)
+                                res.status(201).json({
+                                    code: 201,
+                                    status: 'Login Successfully!',
+                                    data: entity
+                                })
                             }
                             return null
                         }

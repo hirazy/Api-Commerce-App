@@ -4,7 +4,8 @@ const categorySchema = new Schema({
     name: {
         type: String,
         trim: true,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         required: true,
@@ -13,7 +14,8 @@ const categorySchema = new Schema({
     },
     products: [{
         type: Schema.Types.ObjectId,
-        required: true
+        required: true,
+        unique: true
     }],
 }, { timestamps: true })
 
@@ -22,12 +24,14 @@ categorySchema.methods = {
         const view = {
             // simple viewd
             id: this.id,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            name: this.name,
+            description: this.description
+                // createdAt: this.createdAt,
+                // updatedAt: this.updatedAt
         }
 
         return full ? {
-            ...view
+            ...view,
             // add properties for a full view
         } : view
     },

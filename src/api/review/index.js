@@ -18,7 +18,7 @@ const router = new Router()
  */
 router.post('/',
     master(),
-    token({ required: true }),
+    // token({ required: true }),
     body({ user, product, review, rating }),
     create)
 
@@ -43,7 +43,21 @@ router.get('/',
  * @apiError 404 Review not found.
  */
 router.get('/:id',
+    master(),
     show)
+
+/**
+ * @api {get} /reviews Retrieve reviews
+ * @apiName RetrieveReviews
+ * @apiGroup Review
+ * @apiUse listParams
+ * @apiSuccess {Object[]} reviews List of reviews.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/product/:id',
+    master(),
+    query(),
+    index)
 
 /**
  * @api {put} /reviews/:id Update review

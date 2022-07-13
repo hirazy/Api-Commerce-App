@@ -30,7 +30,7 @@ import cartItem from './cart_item'
 
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
-    max: 30,
+    max: 45,
     message: 'Too many connection',
 });
 
@@ -88,5 +88,6 @@ router.use('/order_items', orderItem)
 router.use('/devices', device)
 router.use('/favorites', favorite)
 router.use('/cart_items', cartItem)
+router.use('/favorites', favorite)
 
 export default router

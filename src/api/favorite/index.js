@@ -1,7 +1,11 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
-export Favorite, { schema } from './model'
+import { middleware as body } from 'bodymen'
+import { master, token } from '../../services/passport'
+import { create, index, show, update, destroy, getFavoriteProduct } from './controller'
+import Favorite, { schema } from './model'
+
+const { user, product } = schema.tree
 
 const router = new Router()
 
@@ -13,8 +17,11 @@ const router = new Router()
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Favorite not found.
  */
-router.post('/',
-  create)
+router.post('/product/:id',
+    // master(),
+    token({ required: true, roles: ["user"] }),
+    // body({ product }),
+    create)
 
 /**
  * @api {get} /favorites Retrieve favorites
@@ -25,8 +32,20 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-  query(),
-  index)
+    query(),
+    index)
+
+/**
+ * @api {get} /favorites/:id Retrieve favorite
+ * @apiName RetrieveFavorite
+ * @apiGroup Favorite
+ * @apiSuccess {Object} favorite Favorite's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Favorite not found.
+ */
+router.get('/product/:id',
+    token({ required: true }),
+    getFavoriteProduct)
 
 /**
  * @api {get} /favorites/:id Retrieve favorite
@@ -37,7 +56,20 @@ router.get('/',
  * @apiError 404 Favorite not found.
  */
 router.get('/:id',
-  show)
+    show)
+
+// /**
+//  * @api {get} /favorites/:id Retrieve favorite
+//  * @apiName RetrieveFavorite
+//  * @apiGroup Favorite
+//  * @apiSuccess {Object} favorite Favorite's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Favorite not found.
+//  */
+// router.get('/product/:user/:product',
+//     master(),
+//     token({ required: true, }),
+//     show)
 
 /**
  * @api {put} /favorites/:id Update favorite
@@ -48,7 +80,7 @@ router.get('/:id',
  * @apiError 404 Favorite not found.
  */
 router.put('/:id',
-  update)
+    update)
 
 /**
  * @api {delete} /favorites/:id Delete favorite
@@ -58,6 +90,6 @@ router.put('/:id',
  * @apiError 404 Favorite not found.
  */
 router.delete('/:id',
-  destroy)
+    destroy)
 
 export default router

@@ -4,7 +4,7 @@ import { twilioAccountSID as accountSid, twilioAuthToken as authToken } from '..
 const client = require('twilio')(accountSid, authToken);
 
 export const sendSms = ({ body, from, to, otp }) => {
-    console.log('Account ID ' + accountSid + ' Auth Token ' + authToken)
+    // console.log('Account ID ' + accountSid + ' Auth Token ' + authToken)
     const sms = {
             body: body,
             messagingServiceSid: 'MG10ff6f124fb4762fc28d2c91d50d8bf9',

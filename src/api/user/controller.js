@@ -36,7 +36,16 @@ export const create = ({ bodymen: { body } }, res, next) =>
     .then(user => {
         sign(user.id)
             .then((token) => ({ token, user: user.view(true) }))
-            .then(success(res, 201))
+            .then(
+                // success(res, 201)
+                (entity) => {
+                    res.status(201).json({
+                        code: 201,
+                        status: 'Registered Successfully',
+                        data: entity
+                    })
+                }
+            )
     })
     .catch((err) => {
         /* istanbul ignore else */

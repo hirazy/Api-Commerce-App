@@ -26,7 +26,7 @@ setImmediate(() => {
 })
 
 app.get('/', async(req, res) => {
-    await client.connect()
+    // await client.connect()
 
     console.log("Hehe " + await client.get("name"))
 })

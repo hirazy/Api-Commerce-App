@@ -2,32 +2,61 @@ import { success, notFound } from '../../services/response/'
 import Review, { schema } from './model'
 
 export const create = async({ body }, res, next) => {
-    try {
-        const review = new Review({
-            user: body.userId,
-            product: body.productId,
-            review: body.review,
-            rating: body.rating
+    Review.create(body)
+        .then(review => {
+            // sign(user.id)
+            //     .then((token) => ({ token, user: user.view(true) }))
+            //     .then(
+            //         // success(res, 201)
+            //         (entity) => {
+            //             res.status(201).json({
+            //                 code: 201,
+            //                 status: 'Registered Successfully',
+            //                 data: entity
+            //             })
+            //         }
+            //     )
+            res.status(200).json(review)
+        })
+        .catch((err) => {
+            /* istanbul ignore else */
+            // if (err.name === 'MongoError' && err.code === 11000) {
+            //     res.status(409).json({
+            //         valid: false,
+            //         // param: 'email',
+            //         message: err.message
+            //     })
+            // } else {
+            //     next(err)
+            // }
         })
 
-        const result = await review.save()
+    // try {
+    //     const review = new Review({
+    //         user: body.userId,
+    //         product: body.productId,
+    //         review: body.review,
+    //         rating: body.rating
+    //     })
 
-        if (result) {
-            res.status(200).json({
-                data: review.view()
-            })
-        } else {
-            res.status(400).json({
-                status: "Warning",
-                message: "Failure to create Review"
-            })
-        }
-    } catch (e) {
-        res.status(500).json({
-            status: "error",
-            message: e.message
-        })
-    }
+    //     const result = await review.save()
+
+    //     if (result) {
+    //         res.status(200).json({
+    //             data: review.view()
+    //         })
+    //     } else {
+    //         res.status(400).json({
+    //             status: "Warning",
+    //             message: "Failure to create Review"
+    //         })
+    //     }
+    // } catch (e) {
+    //     res.status(500).json({
+    //         status: "error",
+    //         message: e.message
+    //     })
+    // }
 }
 
 // Review.create(body)

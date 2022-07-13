@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { middleware as body } from 'bodymen'
+import { create, index, show, update, destroy, getByUser, addItem, reduceItem } from './controller'
 import { master, token } from '../../services/passport'
 import Cart, { schema } from './model'
 
-// const { product, user, } = schema.tree
+const { product, user, description, quantity } = schema.tree
 
 const router = new Router()
 
@@ -17,8 +18,10 @@ const router = new Router()
  * @apiError 404 Cart not found.
  */
 router.post('/',
-    master(),
+    // master(),
     token({ required: true }),
+    body({ product, description, quantity }),
+    // token({ required: true }),
     create)
 
 /**
@@ -43,10 +46,36 @@ router.get('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Cart not found.
  */
-router.get('/:id',
-    master(),
+// router.get('/:id',
+//     master(),
+//     token({ required: true }),
+//     show)
+
+/**
+ * @api {get} /carts/:id Retrieve cart
+ * @apiName RetrieveCart
+ * @apiGroup Cart
+ * @apiSuccess {Object} cart Cart's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Cart not found.
+ */
+router.get('/user',
+    //master(),
     token({ required: true }),
-    show)
+    getByUser)
+
+/**
+ * @api {get} /carts/:id Retrieve cart
+ * @apiName RetrieveCart
+ * @apiGroup Cart
+ * @apiSuccess {Object} cart Cart's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Cart not found.
+ */
+router.get('/user/:id',
+    master(),
+    // token({ required: true }),
+    getByUser)
 
 /**
  * @api {put} /carts/:id Update cart
@@ -69,8 +98,8 @@ router.put('/:id',
  * @apiError 404 Cart not found.
  */
 router.delete('/:id',
-    master(),
-    token({ required: true, roles: ['admin'] }),
+    //master(),
+    token({ required: true, roles: ['user'] }),
     destroy)
 
 export default router
