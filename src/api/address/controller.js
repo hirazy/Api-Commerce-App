@@ -1,11 +1,37 @@
 import { success, notFound } from '../../services/response/'
 import Address, { schema } from './model'
+import User, { userSchema } from '../user/model'
+import mongoose, { Schema } from 'mongoose'
 
-export const create = ({ body }, res, next) =>
-    Address.create(body)
-    .then((address) => address.view(true))
-    .then(success(res, 201))
-    .catch(next)
+export const create = async({ user, body }, res, next) => {
+    // console.log('default ' + body.isDefault)
+    let newAddress = {
+        user: mongoose.Types.ObjectId(user.id),
+        name: body.name,
+        phone: body.phone,
+        city: body.city,
+        street: body.street,
+        isHome: body.isHome
+    }
+
+    let address = Address.create(newAddress)
+        .then((address) => address.view(true))
+        .then((address) => {
+            if (user.address == null) {
+                Object.assign(user, { address: address.id }).save()
+            }
+            res.status(200).json(address)
+        })
+        .catch(next)
+}
+
+export const getAllUser = ({ user }, res, next) => {
+
+    Address.find({ user: user.id })
+        .then((addresses) => addresses.map((address) => address.view()))
+        .then(success(res))
+        .catch(next)
+}
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Address.find(query, select, cursor)

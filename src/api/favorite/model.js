@@ -28,9 +28,6 @@ favoriteSchema.pre('save', function(next) {
         this.followTime = Date.now()
     }
 
-    // else {
-    //     this.followTime = Date.now()
-    // }
     next()
 })
 

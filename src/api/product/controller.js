@@ -36,16 +36,9 @@ export const getHomeProduct = ({ params }, res, next) => {
 }
 
 export const getProductDetail = async({ params }, res, next) => {
-    console.log("Get Product Detail")
-
-    let product = await Product.findById(params.id, function(err, product) {
-        if (err) {
-            if (err) {
-                // error finding brother
-                res.status(404).json(err);
-            }
-        }
-    })
+    let product = await Product.findById(params.id)
+        .then(notFound(res))
+        .catch(next)
 
     // product._id = null
     // .then(notFound(res))
@@ -99,7 +92,7 @@ export const getProductDetail = async({ params }, res, next) => {
 
 export const getRandomProduct = ({ params }, res, next) => {
     console.log("Get Random Product")
-    Product.aggregate([{ $match: {} }, { $sample: { size: 8 } }])
+    Product.aggregate([{ $match: {} }, { $sample: { size: 12 } }])
         .then((products) => {
             let productViews = []
             products.map((product) => {
@@ -118,6 +111,22 @@ export const getRandomProduct = ({ params }, res, next) => {
         .catch(next)
 }
 
+
+export const getProductFavorites = ({ params, user }, res, next) => {
+    Favorite.find({ user: user.id })
+        .then(async(favorites) => {
+            let products = []
+            for (let favorite of favorites) {
+                if (favorite.isFavorite()) {
+                    await Product.findById(favorite.product)
+                        .then((product) => {
+                            products.push(product.view())
+                        })
+                }
+            }
+            res.status(200).json(products)
+        })
+}
 
 
 export const searchByName = ({ params }, res, next) =>

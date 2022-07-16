@@ -98,13 +98,15 @@ export const reduceItem = ({ params }, res, next) => {
         .catch(next)
 }
 
-export const update = ({ body, params }, res, next) =>
+export const update = ({ body, params }, res, next) => {
     Cart.findById(params.id)
-    .then(notFound(res))
-    .then((cart) => cart ? Object.assign(cart, body).save() : null)
-    .then((cart) => cart ? cart.view(true) : null)
-    .then(success(res))
-    .catch(next)
+        .then(notFound(res))
+        .then((cart) => cart ? Object.assign(cart, body).save() : null)
+        .then((cart) => cart ? cart.view(true) : null)
+        .then(success(res))
+        .catch(next)
+}
+
 
 export const destroy = ({ params, user }, res, next) => {
     Cart.findById(params.id)

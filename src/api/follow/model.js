@@ -6,28 +6,42 @@ const followSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
-    follower_id: {
-        ref: "User",
+    shop: {
+        ref: "Shop",
         type: Schema.Types.ObjectId,
         required: true
     },
-    followedDate: {
+    followTime: {
         type: Date,
-        required: false
+        required: false,
+        default: Date.now()
     },
-    unfollowedDate: {
+    unFollowTime: {
         required: false,
         type: Date
     }
 }, { timestamps: true })
+
+followSchema.pre('save', function(next) {
+
+    if (!this.isModified('followTime')) return next()
+
+    if (this.followTime == null) {
+        this.followTime = Date.now()
+    }
+
+    next()
+})
 
 followSchema.methods = {
     view(full) {
         const view = {
             // simple view
             id: this.id,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            user: this.user,
+            shop: this.shop,
+            followTime: this.followTime,
+            unFollowTime: this.unFollowTime,
         }
 
         return full ? {
@@ -35,38 +49,20 @@ followSchema.methods = {
             // add properties for a full view
         } : view
     },
-
-    follow() {
-
-        const view = {
-            // simple view
-            id: this.id,
-            createdAt: this.createdAt,
-            followedDate: this.followedDate
-        }
-
-        this.followedDate = new Date()
-
-        return view
+    isFollow() {
+        return this.unFollowTime != null ?
+            ((this.followTime.getTime() > this.unFollowTime.getTime()) ? true : false) : true
     },
-
-    unfollow() {
-
-        this.unfollowedDate = new Date()
-
-        const view = {
-            // simple view
-            user_id: this.user_id,
-            follower_id: this.follower_id,
-            updatedAt: this.updatedAt,
-            followedDate: this.followedDate,
-            unfollowedDate: this.unfollowedDate
+    changeFollow() {
+        if (this.isFollow()) {
+            this.unFollowTime = Date.now()
+        } else {
+            this.followTime = Date.now()
         }
-
-        return view
     }
-
 }
+
+followSchema.index({ shop: 1, user: 1 }, { unique: true })
 
 const model = mongoose.model('Follow', followSchema)
 

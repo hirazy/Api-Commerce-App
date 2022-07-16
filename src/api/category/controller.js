@@ -1,6 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import Category, { schema } from './model'
 import Product, { productSchema } from '../product/model'
+import Shop, { shoptSchema } from '../shop/model'
 
 export const create = ({ body }, res, next) =>
     Category.create(body)
@@ -65,6 +66,39 @@ export const getAllCategory = async({ querymen: { query, select, cursor } }, res
 
     res.status(200).json({
         categories: categories,
+        products: products
+    })
+}
+
+export const getDetailCategory = async({ params }, res, next) => {
+
+    let categories = await Category.findById(params.id, function(err, categories) {
+        if (err) {
+            if (err) {
+                res.status(404).json(err);
+            }
+        }
+    })
+
+
+    let shops = []
+    for (let shop of categories.shops) {
+        let shopView = await Shop.findById(shop)
+            .then((shop) => shop.view())
+            .catch(next)
+        shops.push(shopView)
+    }
+
+    let products = []
+    for (let product of categories.products) {
+        let productView = await Product.findById(product)
+            .then((product) => product.view())
+            .catch(next)
+        products.push(productView)
+    }
+
+    res.status(200).json({
+        shops: shops,
         products: products
     })
 }

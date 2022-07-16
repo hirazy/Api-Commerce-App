@@ -13,10 +13,17 @@ const categorySchema = new Schema({
         trim: true
     },
     products: [{
+        ref: 'Product',
         type: Schema.Types.ObjectId,
         required: true,
         unique: true
     }],
+    shops: [{
+        ref: 'Shop',
+        type: Schema.Types.ObjectId,
+        required: true,
+        unique: true
+    }]
 }, { timestamps: true })
 
 categorySchema.methods = {
@@ -32,7 +39,9 @@ categorySchema.methods = {
 
         return full ? {
             ...view,
-            // add properties for a full view
+            products: this.products,
+            shops: this.shops
+                // add properties for a full view
         } : view
     },
 

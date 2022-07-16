@@ -1,11 +1,54 @@
 import { success, notFound } from '../../services/response/'
 import Follow, { schema } from './model'
 
-export const create = ({ body }, res, next) =>
-    Follow.create(body)
-    .then((follow) => follow.view(true))
-    .then(success(res, 201))
-    .catch(next)
+export const create = ({ params, user }, res, next) => {
+
+    // Follow.create(body)
+    //     .then((follow) => follow.view(true))
+    //     .then(success(res, 201))
+    //     .catch(next)
+
+    let isExistFollow = Follow.find({ user: user.id, shop: params.id })
+        .then((follows) => {
+            if (follows.length > 0) {
+                let saved = Object.assign(follows[0], follows[0].changeFollow()).save()
+                return res.status(200).json({ follow: follows[0].isFollow() })
+            } else {
+                Follow.create({ user: user.id, shop: params.id })
+                    .then((follow) => {
+                        res.status(200).json({ follow: follow.isFollow() })
+                    })
+                    .catch(next)
+            }
+        })
+        .catch(next)
+}
+
+export const getFollowShop = ({ user, params }, res, next) => {
+    Follow.find({ user: user.id, shop: params.id })
+        .then((follows) => {
+            if (follows.length > 0) {
+                return res.status(200).json({ follow: follows[0].isFollow() })
+            } else {
+                return res.status(200).json({ follow: false })
+            }
+        })
+        .catch(next)
+}
+
+export const getFollowMe = ({ user }, res, next) => {
+    Follow.find({ user: user.id })
+        .then((follows) => {
+
+            let count = 0
+            for (let follow of follows) {
+                if (follow.isFollow()) {
+                    count++;
+                }
+            }
+            res.status(200).json({ count: count })
+        })
+}
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Follow.find(query, select, cursor)

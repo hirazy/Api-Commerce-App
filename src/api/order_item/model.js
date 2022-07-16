@@ -6,6 +6,11 @@ const orderItemSchema = new Schema({
         ref: 'Order',
         required: true
     },
+    address: {
+        type: Schema.Types.ObjectId,
+        ref: 'Address',
+        required: true
+    },
     product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
@@ -34,6 +39,9 @@ orderItemSchema.methods = {
             ...view
             // add properties for a full view
         } : view
+    },
+    getAllPrice() {
+        return quantity * price
     }
 }
 

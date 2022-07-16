@@ -86,8 +86,8 @@ router.get('/user/:id',
  * @apiError 404 Cart not found.
  */
 router.put('/:id',
-    master(),
-    token({ required: true }),
+    // master(),
+    token({ required: true, roles: ['user'] }),
     update)
 
 /**

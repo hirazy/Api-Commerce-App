@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy, getAllCategory } from './controller'
+import { create, index, show, update, destroy, getAllCategory, getDetailCategory } from './controller'
 import { master, token } from '../../services/passport'
 import Category, { schema } from './model'
 
@@ -50,6 +50,19 @@ router.get('/detail',
     query(),
     // token({ required: true, roles: ["admin"] }),
     getAllCategory)
+
+/**
+ * @api {get} /categories Retrieve categories
+ * @apiName RetrieveCategories
+ * @apiGroup Category
+ * @apiUse listParams
+ * @apiSuccess {Object[]} categories List of categories.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/detail/:id',
+    master(),
+    // token({ required: true, roles: ["admin"] }),
+    getDetailCategory)
 
 /**
  * @api {get} /categories/:id Retrieve category

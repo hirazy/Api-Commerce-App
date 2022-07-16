@@ -136,7 +136,11 @@ export const loginByEmail = ({ bodymen: { body: { email } } }, res, next) => {
                 .then((token) => ({ token, user: user.view(true) }))
                 .then((entity) => {
                     if (entity) {
-                        res.status(201).json(entity)
+                        res.status(201).json({
+                            status: 'Login Successfully',
+                            code: 201,
+                            data: entity
+                        })
                     }
                     return null
                 })

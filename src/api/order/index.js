@@ -19,9 +19,9 @@ const router = new Router()
  * @apiError 404 Order not found.
  */
 router.post('/',
-    master(),
+    // master(),
     token({ required: true, roles: ["user"] }),
-    body({ user, totalPrice, }),
+    body({ user, totalPrice }),
     create)
 
 /**

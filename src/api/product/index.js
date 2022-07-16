@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy, searchByKeyWord, searchByCategory, getRandomProduct, getProductDetail } from './controller'
+import { create, index, show, update, destroy, searchByKeyWord, searchByCategory, getRandomProduct, getProductDetail, getProductFavorites } from './controller'
 import Product, { schema } from './model'
 import { password as passwordAuth, master, token } from '../../services/passport'
 const sequelize = require('sequelize')
@@ -61,6 +61,19 @@ router.get('/id/:id',
     master(),
     token({ required: false }),
     show)
+
+/**
+ * @api {get} /products/:id Retrieve product
+ * @apiName RetrieveProduct
+ * @apiGroup Product
+ * @apiSuccess {Object} product Product's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Product not found.
+ */
+router.get('/favorites/me',
+    // master(),
+    token({ required: true }),
+    getProductFavorites)
 
 /**
  * @api {get} /products/search:name Retrieve product by Search by Keywords

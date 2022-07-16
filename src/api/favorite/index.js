@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { master, token } from '../../services/passport'
-import { create, index, show, update, destroy, getFavoriteProduct } from './controller'
+import { create, index, show, update, destroy, getFavoriteProduct, getFavoriteMe, getFavoriteMeDetail } from './controller'
 import Favorite, { schema } from './model'
 
 const { user, product } = schema.tree
@@ -47,16 +47,16 @@ router.get('/product/:id',
     token({ required: true }),
     getFavoriteProduct)
 
-/**
- * @api {get} /favorites/:id Retrieve favorite
- * @apiName RetrieveFavorite
- * @apiGroup Favorite
- * @apiSuccess {Object} favorite Favorite's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Favorite not found.
- */
-router.get('/:id',
-    show)
+// /**
+//  * @api {get} /favorites/:id Retrieve favorite
+//  * @apiName RetrieveFavorite
+//  * @apiGroup Favorite
+//  * @apiSuccess {Object} favorite Favorite's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Favorite not found.
+//  */
+// router.get('/:id',
+//     show)
 
 // /**
 //  * @api {get} /favorites/:id Retrieve favorite
@@ -70,6 +70,34 @@ router.get('/:id',
 //     master(),
 //     token({ required: true, }),
 //     show)
+
+/**
+ * @api {get} /favorites Retrieve favorites
+ * @apiName RetrieveFavorites
+ * @apiGroup Favorite
+ * @apiUse listParams
+ * @apiSuccess {Object[]} favorites List of favorites.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/me',
+    // master(),
+    token({ required: true, roles: ['user'] }),
+    // query(),
+    getFavoriteMe)
+
+/**
+ * @api {get} /favorites Retrieve favorites Detail
+ * @apiName RetrieveFavorites
+ * @apiGroup Favorite
+ * @apiUse listParams
+ * @apiSuccess {Object[]} favorites List of favorites.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/me/detail',
+    // master(),
+    token({ required: true, roles: ['user'] }),
+    // query(),
+    getFavoriteMeDetail)
 
 /**
  * @api {put} /favorites/:id Update favorite

@@ -4,6 +4,8 @@ import { create, index, show, update, destroy } from './controller'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import OrderItem, { schema } from './model'
 
+const {} = schema.tree
+
 const router = new Router()
 
 /**

@@ -44,6 +44,28 @@ export const updateFavoriteProduct = ({ params }, res, next) => {
 
 }
 
+export const getFavoriteMe = ({ user }, res, next) => {
+    Favorite.find({ user: user.id })
+        .then((favorites) => {
+
+            let count = 0
+            for (let favorite of favorites) {
+                if (favorite.isFavorite()) {
+                    count++;
+                }
+            }
+            res.status(200).json({ count: count })
+        })
+}
+
+export const getFavoriteMeDetail = ({ user }, res, next) => {
+    Favorite.find({ user: user.id })
+        .then((favorites) => {
+            res.status(200).json(favorites)
+        })
+}
+
+
 export const show = ({ params }, res, next) =>
     Favorite.findById(params.id)
     .then(notFound(res))

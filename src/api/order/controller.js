@@ -1,11 +1,14 @@
 import { success, notFound } from '../../services/response/'
 import Order, { schema } from './model'
+import OrderItem, { oderItemSchema } from '../order_item/model'
 
-export const create = ({ body }, res, next) =>
+export const create = ({ body }, res, next) => {
     Order.create(body)
-    .then((order) => order.view(true))
-    .then(success(res, 201))
-    .catch(next)
+        .then((order) => order.view(true))
+        .then(success(res, 201))
+        .catch(next)
+}
+
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Order.find(query, select, cursor)

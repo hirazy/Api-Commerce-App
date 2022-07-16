@@ -12,14 +12,9 @@ const addressSchema = new Schema({
     },
     phone: {
         type: String,
-        index: true,
+        // index: true,
         trim: true,
-        unique: true,
         validate: [isMobilePhone]
-    },
-    isDefault: {
-        type: Boolean,
-        required: false
     },
     city: {
         type: String,
@@ -28,12 +23,12 @@ const addressSchema = new Schema({
     },
     country: {
         type: String,
-        default: '',
-        required: true
+        default: 'VI',
+        required: false
     },
     district: {
         type: String,
-        required: true,
+        required: false,
         default: ''
     },
     postal_code: {
@@ -41,14 +36,11 @@ const addressSchema = new Schema({
         default: ''
     },
     zipCode: {
+        required: false,
         type: String,
         default: ''
     },
-    isDefault: {
-        type: Boolean,
-        default: false
-    },
-    address: {
+    street: {
         type: String,
         required: true
     },
@@ -59,14 +51,6 @@ const addressSchema = new Schema({
         type: Boolean,
         required: true
     }
-    // addressLine1: {
-    //     type: String,
-    //     required: true,
-    // },
-    // addressLine2: {
-    //     type: String,
-    //     required: false
-    // }
 
 }, { timestamps: true })
 
@@ -75,8 +59,11 @@ addressSchema.methods = {
         const view = {
             // simple view
             id: this.id,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            name: this.name,
+            phone: this.phone,
+            city: this.city,
+            street: this.street,
+            isHome: this.isHome
         }
 
         return full ? {
@@ -85,6 +72,8 @@ addressSchema.methods = {
         } : view
     }
 }
+
+// addressSchema.index({ name: 1, phone: 1, }, { unique: true })
 
 const model = mongoose.model('Address', addressSchema)
 

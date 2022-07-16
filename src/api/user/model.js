@@ -23,8 +23,7 @@ const userSchema = new Schema({
         required: false,
         unique: true,
         trim: true,
-        default: ''
-            // validate: []
+        // validate: []
     },
     password: {
         type: String,
@@ -42,6 +41,7 @@ const userSchema = new Schema({
         required: false
     },
     phone: {
+        required: false,
         type: String,
         index: true,
         trim: true,
@@ -54,11 +54,11 @@ const userSchema = new Schema({
         type: Date,
         required: false
     },
-    // address: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Address",
-    //     required: false
-    // }],
+    address: {
+        type: Schema.Types.ObjectId,
+        ref: 'Address',
+        required: false
+    },
     gender: {
         required: false,
         type: String,

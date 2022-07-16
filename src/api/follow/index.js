@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as body } from 'bodymen'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, getFollowShop, getFollowMe } from './controller'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import Follow, { schema } from './model'
 
@@ -15,10 +15,36 @@ const router = new Router()
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Follow not found.
  */
-router.post('/',
-    master(),
-    token({ required: true, roles: ['user', 'admin'] }),
+router.post('/shop/:id',
+    // master(),
+    token({ required: true, roles: ['user'] }),
     create)
+
+/**
+ * @api {get} /favorites/:id Retrieve favorite
+ * @apiName RetrieveFavorite
+ * @apiGroup Favorite
+ * @apiSuccess {Object} favorite Favorite's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Favorite not found.
+ */
+router.get('/shop/:id',
+    token({ required: true }),
+    getFollowShop)
+
+/**
+ * @api {get} /favorites Retrieve favorites
+ * @apiName RetrieveFavorites
+ * @apiGroup Favorite
+ * @apiUse listParams
+ * @apiSuccess {Object[]} favorites List of favorites.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/me',
+    // master(),
+    token({ required: true, roles: ['user'] }),
+    // query(),
+    getFollowMe)
 
 /**
  * @api {get} /follows Retrieve follows
