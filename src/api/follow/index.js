@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as body } from 'bodymen'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy, getFollowShop, getFollowMe } from './controller'
+import { create, index, show, update, destroy, getFollowShop, getFollowMe, getFollowMeDetail } from './controller'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import Follow, { schema } from './model'
 
@@ -45,6 +45,20 @@ router.get('/me',
     token({ required: true, roles: ['user'] }),
     // query(),
     getFollowMe)
+
+/**
+ * @api {get} /favorites Retrieve favorites
+ * @apiName RetrieveFavorites
+ * @apiGroup Favorite
+ * @apiUse listParams
+ * @apiSuccess {Object[]} favorites List of favorites.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/me/detail',
+    // master(),
+    token({ required: true, roles: ['user'] }),
+    // query(),
+    getFollowMeDetail)
 
 /**
  * @api {get} /follows Retrieve follows
