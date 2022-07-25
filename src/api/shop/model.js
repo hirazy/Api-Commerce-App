@@ -113,7 +113,16 @@ shopSchema.methods = {
 
         return view
     },
-
+    viewFollow() {
+        const view = {
+            id: this.id,
+            name: this.name,
+            picture: this.picture,
+            images: this.images,
+            followers: this.followers
+        }
+        return view
+    },
     view(full) {
         const view = {
             // simple view

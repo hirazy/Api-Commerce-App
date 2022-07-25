@@ -1,5 +1,6 @@
 import { success, notFound } from '../../services/response/'
 import Follow, { schema } from './model'
+import Shop, { shopSchema } from '../shop/model'
 
 export const create = ({ params, user }, res, next) => {
 
@@ -47,6 +48,24 @@ export const getFollowMe = ({ user }, res, next) => {
                 }
             }
             res.status(200).json({ count: count })
+        })
+}
+
+export const getFollowMeDetail = async({ user }, res, next) => {
+    Follow.find({ user: user.id })
+        .then((follow) => follow.filter((follow) => follow.isFollow() == true))
+        .then(async(follows) => {
+            let shops = []
+            for (let follow of follows) {
+                console.log(follow.shop)
+                let shop = await Shop.findById(follow.shop)
+                    .then(notFound(res))
+                    .then((shop) => shop ? shop.viewFollow() : null)
+                    .catch(next)
+
+                shops.push(shop)
+            }
+            res.status(200).json(shops)
         })
 }
 
