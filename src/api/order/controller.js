@@ -1,12 +1,39 @@
 import { success, notFound } from '../../services/response/'
 import Order, { schema } from './model'
 import OrderItem, { oderItemSchema } from '../order_item/model'
+import Cart, { cartItemSchema } from '../cart/model'
 
-export const create = ({ body }, res, next) => {
-    Order.create(body)
+export const create = async({ user, body }, res, next) => {
+
+    let order = await Order.create({
+            user: user.id,
+            totalCost: body.totalCost,
+            address: body.address
+        })
         .then((order) => order.view(true))
-        .then(success(res, 201))
         .catch(next)
+
+    console.log(order.id)
+
+    for (let o of body.carts) {
+        console.log('Alo 123  ' + o.id)
+        let orderItem = await OrderItem.create({
+                order: order.id,
+                address: user.address,
+                product: o.product,
+                quantity: o.quantity,
+                price: o.price,
+                message: o.message
+            })
+            .catch(next)
+
+        await Cart.findById(o.id)
+            .then(notFound(res))
+            .then((cart) => cart ? cart.remove() : null)
+            .catch(next)
+    }
+
+    res.status(200).json(order)
 }
 
 

@@ -5,41 +5,23 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
-    comment: {
-        type: String,
-        required: false,
-        trim: true
-    },
-    items: [{
-        type: Schema.Types.ObjectId,
-        ref: 'OrderItem'
-    }],
-    // phone: {
-    //     type: String,
-    //     required: true,
-    // },
+    // orders: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'OrderItem'
+    // }],
     address: {
         required: true,
         type: Schema.Types.ObjectId,
         ref: "Address",
     },
-    reference: {
-        type: String,
-        required: true
-    },
+    // reference: {
+    //     type: String,
+    //     required: true
+    // },
+    // transaction
     totalCost: {
         type: Number,
         required: true
-    },
-    isPaid: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    paidAt: {
-        type: Date,
-        required: true,
-        default: false
     }
 }, { timestamps: true })
 
@@ -48,13 +30,15 @@ orderSchema.methods = {
         const view = {
             // simple view
             id: this.id,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            address: this.address,
+            totalCost: this.totalCost,
         }
 
         return full ? {
-            ...view
-            // add properties for a full view
+            ...view,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+                // add properties for a full view
         } : view
     }
 

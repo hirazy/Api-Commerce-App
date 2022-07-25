@@ -1,5 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import Favorite, { schema } from './model'
+import Product, { productSchema } from '../product/model'
+import Shop, { shopSchema } from '../shop/model'
 
 export const create = ({ params, user }, res, next) => {
     console.log(`${params.id} ${user.id}`)
@@ -58,10 +60,32 @@ export const getFavoriteMe = ({ user }, res, next) => {
         })
 }
 
-export const getFavoriteMeDetail = ({ user }, res, next) => {
+export const getFavoriteMeDetail = async({ user }, res, next) => {
     Favorite.find({ user: user.id })
-        .then((favorites) => {
-            res.status(200).json(favorites)
+        .then((favorites) => favorites.filter((favorite) => favorite.isFavorite() == true))
+        .then(async(favorites) => {
+            let products = []
+            for (let favorite of favorites) {
+                let product = await Product.findById(favorite.product)
+                    .then(notFound(res))
+                    .then((product) => product ? product.view(true) : null)
+                    .catch(next)
+
+                let shop = await Shop.findById(product.shop)
+                    .then(notFound(res))
+                    .then((shop) => shop ? shop.view() : null)
+                    .catch(next)
+
+                products.push({
+                    product: product.id,
+                    shop: product.shop,
+                    price: product.price,
+                    name: product.name,
+                    image: product.image,
+                    shopName: shop.name
+                })
+            }
+            res.status(200).json(products)
         })
 }
 

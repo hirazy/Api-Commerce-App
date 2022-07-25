@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy, getByUser, addItem, reduceItem } from './controller'
+import { create, index, show, update, destroy, getByUser, addItem, reduceItem, getOrderCarts } from './controller'
 import { master, token } from '../../services/passport'
 import Cart, { schema } from './model'
 
-const { product, user, description, quantity } = schema.tree
+const { product, user, description, quantity, carts } = schema.tree
 
 const router = new Router()
 
@@ -63,6 +63,19 @@ router.get('/user',
     //master(),
     token({ required: true }),
     getByUser)
+
+/**
+ * @api {get} /carts Retrieve carts
+ * @apiName RetrieveCarts
+ * @apiGroup Cart
+ * @apiUse listParams
+ * @apiSuccess {Object[]} carts List of carts.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.post('/order',
+    token({ required: true, roles: ['user'] }),
+    body({ carts }),
+    getOrderCarts)
 
 /**
  * @api {get} /carts/:id Retrieve cart

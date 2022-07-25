@@ -32,11 +32,12 @@ messageSchema.methods = {
         const view = {
             // simple view
             id: this.id,
-            roomId: this.roomId,
+            room: this.room,
+            sender: this.sender,
             content: this.content,
             isResource: this.isResource,
             createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            // updatedAt: this.updatedAt
         }
 
         return full ? {

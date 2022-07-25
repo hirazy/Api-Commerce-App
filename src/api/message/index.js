@@ -5,7 +5,7 @@ import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import Message, { schema } from './model'
 
-const { user, shop, resource, content, isResource } = schema.tree
+const { sender, shop, resource, content, room, isResource } = schema.tree
 
 const router = new Router()
 
@@ -18,9 +18,8 @@ const router = new Router()
  * @apiError 404 Message not found.
  */
 router.post('/',
-    master(),
     token({ required: true, roles: ['user'] }),
-    body({ user, isResource, content }),
+    body({ room, isResource, content }),
     create)
 
 /**

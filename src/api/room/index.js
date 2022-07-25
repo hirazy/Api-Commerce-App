@@ -1,8 +1,10 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, getShuffle } from './controller'
 import { master, token } from '../../services/passport'
 import Room, { schema } from './model'
+
+const { user, shop, } = schema.tree
 
 const router = new Router()
 
@@ -15,7 +17,7 @@ const router = new Router()
  * @apiError 404 Room not found.
  */
 router.post('/',
-    master(),
+    // master(),
     token({ required: true }),
     create)
 
@@ -33,6 +35,18 @@ router.get('/',
     index)
 
 /**
+ * @api {get} /rooms Retrieve rooms
+ * @apiName RetrieveRooms
+ * @apiGroup Room
+ * @apiUse listParams
+ * @apiSuccess {Object[]} rooms List of rooms.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/shuffle',
+    token({ required: true, roles: ['user'] }),
+    getShuffle)
+
+/**
  * @api {get} /rooms/:id Retrieve room
  * @apiName RetrieveRoom
  * @apiGroup Room
@@ -40,7 +54,7 @@ router.get('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Room not found.
  */
-router.get('/:id',
+router.get('/detail/:id',
     master(),
     token({ required: true }),
     show)

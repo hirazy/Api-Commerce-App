@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, getOrderbyUser } from './controller'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import OrderItem, { schema } from './model'
 
@@ -35,18 +35,30 @@ router.get('/',
     query(),
     index)
 
+// /**
+//  * @api {get} /order_items/:id Retrieve order item
+//  * @apiName RetrieveOrderItem
+//  * @apiGroup OrderItem
+//  * @apiSuccess {Object} orderItem Order item's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Order item not found.
+//  */
+// router.get('/:id',
+//     master(),
+//     token({ required: true, roles: ["user", "admin"] }),
+//     show)
+
 /**
- * @api {get} /order_items/:id Retrieve order item
- * @apiName RetrieveOrderItem
+ * @api {get} /order_items Retrieve order items
+ * @apiName RetrieveOrderItems
  * @apiGroup OrderItem
- * @apiSuccess {Object} orderItem Order item's data.
+ * @apiUse listParams
+ * @apiSuccess {Object[]} orderItems List of order items.
  * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Order item not found.
  */
-router.get('/:id',
-    master(),
-    token({ required: true, roles: ["user", "admin"] }),
-    show)
+router.get('/user',
+    token({ required: true, roles: ["user"] }),
+    getOrderbyUser)
 
 /**
  * @api {put} /order_items/:id Update order item

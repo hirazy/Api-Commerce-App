@@ -20,9 +20,29 @@ const orderItemSchema = new Schema({
         type: Number,
         default: 1
     },
+    message: {
+        required: false,
+        type: String,
+        default: ''
+    },
     price: {
         type: Number,
         required: true
+    },
+    status: {
+        required: false,
+        type: String,
+        enum: ['UNCONFIRM', 'DELIVERING', 'DELIVERED'],
+        default: 'UNCONFIRM'
+    },
+    isPaid: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    paidAt: {
+        type: Date,
+        required: false,
     }
 }, { timestamps: true })
 
@@ -31,12 +51,17 @@ orderItemSchema.methods = {
         const view = {
             // simple view
             id: this.id,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            order: this.order,
+            product: this.product,
+            quantity: this.quantity,
+            message: this.message,
+            price: this.price
         }
 
         return full ? {
-            ...view
+            ...view,
+            address: this.address
+
             // add properties for a full view
         } : view
     },

@@ -1,6 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import Cart, { schema } from './model'
 import Product, { productSchema } from '../product/model'
+import Shop, { shopSchema } from '../shop/model'
 
 export const create = async({ user, body }, res, next) => {
 
@@ -13,7 +14,6 @@ export const create = async({ user, body }, res, next) => {
         .then(success(res, 201))
         .catch(next)
 }
-
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Cart.find(query, select, cursor)
@@ -76,6 +76,36 @@ export const getByUser = async({ user }, res, next) => {
     //     .catch(next)
 
     res.status(200).json(cartsRes)
+}
+
+export const getOrderCarts = async({ user, body }, res, next) => {
+    console.log(user.id + JSON.stringify(body))
+    let cartOrders = []
+    for (const cart of body.carts) {
+        let cartView = await Cart.findById(cart)
+            .then((cart) => cart ? cart.view() : null)
+
+        if (cartView.user != user.id) {
+            res.status(404)
+        }
+        let product = await Product.findById(cartView.product)
+            .then((product) => product ? product.view(true) : null)
+
+        let shop = await Shop.findById(product.shop)
+            .then((shop) => shop ? shop.view() : null)
+
+        cartOrders.push({
+            id: cart,
+            shop: shop.id,
+            quantity: cartView.quantity,
+            price: cartView.price,
+            shopName: shop.name,
+            product: product.id,
+            productName: product.name,
+            image: product.image
+        })
+    }
+    res.status(200).json(cartOrders)
 }
 
 export const addItem = ({ params }, res, next) => {

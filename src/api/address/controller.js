@@ -33,6 +33,17 @@ export const getAllUser = ({ user }, res, next) => {
         .catch(next)
 }
 
+export const getDefault = ({ user }, res, next) => {
+    if (user.address != null) {
+        Address.findById(user.address)
+            .then((address) => {
+                res.status(200).json(address.view())
+            })
+    } else {
+        res.status(205).json()
+    }
+}
+
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Address.find(query, select, cursor)
     .then((addresses) => addresses.map((address) => address.view()))

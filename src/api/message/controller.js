@@ -2,11 +2,14 @@ import { success, notFound } from '../../services/response/'
 import { middleware as body } from 'bodymen'
 import Message, { schema } from './model'
 
-export const create = ({ bodymen: body }, res, next) =>
-    Message.create(body)
-    .then((message) => message.view(true))
-    .then(success(res, 201))
-    .catch(next)
+export const create = ({ bodymen: body, user }, res, next) => {
+    const bodyMessage = {...body, sender: user.id }
+    Message.create(bodyMessage)
+        .then((message) => message.view(true))
+        .then(success(res, 201))
+        .catch(next)
+}
+
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Message.find(query, select, cursor)

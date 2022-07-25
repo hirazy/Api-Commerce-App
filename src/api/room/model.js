@@ -11,11 +11,6 @@ const roomSchema = new Schema({
         ref: 'Shop',
         required: true
     },
-    messages: [{
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Message'
-    }],
     name: {
         type: String,
         required: false
@@ -27,30 +22,15 @@ roomSchema.methods = {
         const view = {
             // simple view
             id: this.id,
-            createdAt: this.createdAt,
             updatedAt: this.updatedAt,
-            lastMessage: this.messages[this.messages.length - 1],
             user: this.user,
             shop: this.shop
         }
 
         return full ? {
-            ...view,
-            messages: this.messages
+            ...view
         } : view
     },
-
-    addMessage(message) {
-        this.messages = [
-            ...this.messages,
-            message
-        ]
-
-        /**
-         * Add Message
-         */
-        this.save()
-    }
 }
 
 const model = mongoose.model('Room', roomSchema)
