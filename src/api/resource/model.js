@@ -12,7 +12,8 @@ const resourceSchema = new Schema({
     type: {
         type: String,
         enum: ['IMAGE', 'AUDIO', 'VIDEO'],
-        default: 'IMAGE'
+        default: 'IMAGE',
+        required: false
     }
 }, { timestamps: true })
 
@@ -21,14 +22,14 @@ resourceSchema.methods = {
         const view = {
             // simple view
             id: this.id,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            key: this.key,
         }
 
         return full ? {
             ...view,
-            key: this.key,
-            type: this.type
+            type: this.type,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
         } : view
     }
 }

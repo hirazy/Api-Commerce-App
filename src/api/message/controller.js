@@ -1,6 +1,7 @@
 import { success, notFound } from '../../services/response/'
 import { middleware as body } from 'bodymen'
 import Message, { schema } from './model'
+import Room, { roomSchema } from '../room/model'
 
 export const create = ({ bodymen: body, user }, res, next) => {
     const bodyMessage = {...body, sender: user.id }

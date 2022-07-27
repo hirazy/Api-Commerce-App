@@ -89,6 +89,7 @@ export const update = ({ bodymen: { body }, params, user }, res, next) =>
     User.findById(params.id === 'me' ? user.id : params.id)
     .then(notFound(res))
     .then((result) => {
+        console.log(JSON.stringify(body))
         if (!result) return null
         const isAdmin = user.role === 'admin'
         const isSelfUpdate = user.id === result.id

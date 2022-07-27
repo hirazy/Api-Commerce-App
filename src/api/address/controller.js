@@ -44,6 +44,35 @@ export const getDefault = ({ user }, res, next) => {
     }
 }
 
+export const getAddress = ({ params, user }, res, next) => {
+    if (params.id === 'user') {
+        Address.find({ user: user.id })
+            .then((addresses) => addresses.map((address) => address.view()))
+            .then(success(res))
+            .catch(next)
+    } else if (params.id === 'default') {
+        Address.findById(user.address)
+            .then((address) => {
+                res.status(200).json(address.view())
+            })
+            .catch(next)
+    } else {
+        Address.findById(params.id)
+            .then(notFound(res))
+            .then((address) => {
+                if (address.user != user.id) {
+                    res.status(401).json({
+                        'status': 'Not Authorized'
+                    })
+                } else {
+                    return address.view()
+                }
+            })
+            .then(success(res))
+            .catch(next)
+    }
+}
+
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Address.find(query, select, cursor)
     .then((addresses) => addresses.map((address) => address.view()))
@@ -57,17 +86,69 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const update = ({ body, params }, res, next) =>
+export const update = ({ body, params, user }, res, next) => {
     Address.findById(params.id)
-    .then(notFound(res))
-    .then((address) => address ? Object.assign(address, body).save() : null)
-    .then((address) => address ? address.view(true) : null)
-    .then(success(res))
-    .catch(next)
+        .then(notFound(res))
+        .then((address) => {
+            if (address.user != user.id) {
+                res.status(401).json({
+                    'status': 'UnAuthorized'
+                })
+            } else if (body.isDefault == true) {
+                if (user.address != address.id) {
+                    user.address = address.id
+                    user.save()
+                }
+            } else if (body.isDefault == false) {
+                if (user.address == address.id) {
+                    res.status(409).json({
+                        'status': 'Cannot change default address! Please select other addresses to use as default address!'
+                    })
+                    return null
+                }
+            }
+            console.log('Name ' + body.name)
+            const bodyAddress = {
+                "name": body.name,
+                "phone": body.phone,
+                "city": body.city,
+                "street": body.street,
+                "isHome": body.isHome
+            }
+            return address ? Object.assign(address, bodyAddress).save() : null
+        })
+        .then((address) => address ? address.view() : null)
+        .then(success(res))
+        .catch(next)
+}
 
-export const destroy = ({ params }, res, next) =>
+
+export const destroy = ({ params, user }, res, next) => {
     Address.findById(params.id)
-    .then(notFound(res))
-    .then((address) => address ? address.remove() : null)
-    .then(success(res, 204))
-    .catch(next)
+        .then(notFound(res))
+        .then((address) => {
+            if (address == null) {
+                return null
+            }
+            if (address.user != user.id) {
+                res.status(401).json({
+                    'status': 'No Authorize'
+                })
+
+                // return null
+            } else if (user.address == address.id) {
+                res.status(409).json({
+                    'status': 'You cannot remove default address!'
+                })
+
+                // return null
+            } else {
+                console.log('Remove')
+                address.remove()
+                res.status(204).json({
+                    'status': 'Delete Successfully!'
+                })
+            }
+        })
+        .catch(next)
+}

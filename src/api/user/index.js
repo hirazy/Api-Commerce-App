@@ -143,9 +143,8 @@ router.post(
  * @apiError 404 User not found.
  */
 router.put('/:id',
-    master(),
-    token({ required: true }),
-    body({ name, picture }),
+    token({ required: true, roles: ['user'] }),
+    body({ name }),
     update)
 
 /**
@@ -164,7 +163,7 @@ router.put('/:id',
 router.put('/:id/connectEmail',
     master(),
     token({ required: true }),
-    body({ name, picture }),
+    body(),
     update)
 
 /**
@@ -183,7 +182,7 @@ router.put('/:id/connectEmail',
 router.put('/:id/connectFaceBook',
     master(),
     token({ required: true }),
-    body({ name, picture }),
+    body(),
     update)
 
 /**

@@ -1,10 +1,16 @@
+const fs = require("fs");
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
+const multer = require('multer')
+
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { create, index, show, update, destroy } from './controller'
 import { master, token } from '../../services/passport'
 import { middleware as body } from 'bodymen'
+import { uploadFile, getFileStream } from '../../services/s3'
+const upload = multer({ dest: 'uploads/' })
 import Resource, { schema } from './model'
-
 const { key, resourceType } = schema.tree
 
 const router = new Router()
@@ -17,11 +23,61 @@ const router = new Router()
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Resource not found.
  */
+// router.post('/',
+//     // master(),
+//     token({ required: true, roles: ["user", "admin"] }),
+//     // body({ key, resourceType }),
+//     create)
+
+/**
+ * @api {post} /image Upload image
+ * @apiName Upload Image
+ * @apiGroup Image
+ * @apiPermission master
+ * @apiHeader {String} Upload image to folder /uploads 
+ * @apiParam {String} access_token Master access_token.
+ * @apiSuccess (Success 201) {String} name of saved file to be passed to other requests.
+ * @apiSuccess (Success 201) {Object} user Current user's data.
+ * @apiError 401 Master access only or invalid credentials.
+ */
 router.post('/',
     master(),
-    token({ required: true, roles: ["user", "admin"] }),
-    body({ key, resourceType }),
-    create)
+    upload.array('image', 4),
+    create
+    //  async(req, res) => {
+
+    //     const files = req.files
+    //     console.log(files.length)
+    //     let listFiles = []
+    //     for (const file of files) {
+    //         const result = await uploadFile(file)
+    //         await unlinkFile(file.path)
+    //         const description = req.body.description
+    //         listFiles.push(result.key)
+    //     }
+
+    //     res.status(200).json(listFiles);
+    // }
+)
+
+/**
+ * @api {post} /image Upload image
+ * @apiName Upload Image
+ * @apiGroup Image
+ * @apiPermission master
+ * @apiHeader {String} Upload image to folder /uploads 
+ * @apiParam {String} access_token Master access_token.
+ * @apiSuccess (Success 201) {String} name of saved file to be passed to other requests.
+ * @apiSuccess (Success 201) {Object} user Current user's data.
+ * @apiError 401 Master access only or invalid credentials.
+ */
+router.get('/:id', (req, res) => {
+    console.log(req.params.path)
+    const key = req.params.path
+    const readStream = getFileStream(key)
+
+    readStream.pipe(res)
+})
 
 /**
  * @api {get} /resources Retrieve resources
@@ -37,18 +93,18 @@ router.get('/',
     query(),
     index)
 
-/**
- * @api {get} /resources/:id Retrieve resource
- * @apiName RetrieveResource
- * @apiGroup Resource
- * @apiSuccess {Object} resource Resource's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Resource not found.
- */
-router.get('/:id',
-    master(),
-    token({ required: true }),
-    show)
+// /**
+//  * @api {get} /resources/:id Retrieve resource
+//  * @apiName RetrieveResource
+//  * @apiGroup Resource
+//  * @apiSuccess {Object} resource Resource's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Resource not found.
+//  */
+// router.get('/:id',
+//     master(),
+//     token({ required: true }),
+//     show)
 
 /**
  * @api {put} /resources/:id Update resource

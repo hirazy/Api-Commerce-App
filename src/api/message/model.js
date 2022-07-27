@@ -37,7 +37,6 @@ messageSchema.methods = {
             content: this.content,
             isResource: this.isResource,
             createdAt: this.createdAt,
-            // updatedAt: this.updatedAt
         }
 
         return full ? {
