@@ -5,7 +5,7 @@ const multer = require('multer')
 
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, getResourceById } from './controller'
 import { master, token } from '../../services/passport'
 import { middleware as body } from 'bodymen'
 import { uploadFile, getFileStream } from '../../services/s3'
@@ -71,13 +71,9 @@ router.post('/',
  * @apiSuccess (Success 201) {Object} user Current user's data.
  * @apiError 401 Master access only or invalid credentials.
  */
-router.get('/:id', (req, res) => {
-    console.log(req.params.path)
-    const key = req.params.path
-    const readStream = getFileStream(key)
-
-    readStream.pipe(res)
-})
+router.get('/:id',
+    master(),
+    getResourceById)
 
 /**
  * @api {get} /resources Retrieve resources

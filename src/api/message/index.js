@@ -1,9 +1,13 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, createResourceMessage } from './controller'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import Message, { schema } from './model'
+const multer = require('multer')
+const fs = require("fs");
+const util = require('util')
+const upload = multer({ dest: 'uploads/' })
 
 const { sender, shop, resource, content, room, isResource } = schema.tree
 
@@ -21,6 +25,23 @@ router.post('/',
     token({ required: true, roles: ['user'] }),
     body({ room, isResource, content }),
     create)
+
+/**
+ * @api {post} /image Upload image
+ * @apiName Upload Image
+ * @apiGroup Image
+ * @apiPermission master
+ * @apiHeader {String} Upload image to folder /uploads 
+ * @apiParam {String} access_token Master access_token.
+ * @apiSuccess (Success 201) {String} name of saved file to be passed to other requests.
+ * @apiSuccess (Success 201) {Object} user Current user's data.
+ * @apiError 401 Master access only or invalid credentials.
+ */
+router.post('/resource',
+    master(),
+    upload.array('image', 4),
+    createResourceMessage
+)
 
 /**
  * @api {get} /messages Retrieve messages

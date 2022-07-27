@@ -2,6 +2,7 @@ import { success, notFound } from '../../services/response/'
 import { middleware as body } from 'bodymen'
 import Message, { schema } from './model'
 import Room, { roomSchema } from '../room/model'
+import Resource, { resourceSchema } from '../resource/model'
 
 export const create = ({ bodymen: body, user }, res, next) => {
     const bodyMessage = {...body, sender: user.id }
@@ -9,6 +10,10 @@ export const create = ({ bodymen: body, user }, res, next) => {
         .then((message) => message.view(true))
         .then(success(res, 201))
         .catch(next)
+}
+
+export const createResourceMessage = (res, next) => {
+
 }
 
 

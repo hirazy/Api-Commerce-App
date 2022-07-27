@@ -40,7 +40,17 @@ export const getShuffle = async({ user }, res, next) => {
 
             res.status(200).json(shuffles)
         })
+}
 
+export const getRoomByShop = ({ params, user }, res, next) => {
+    Room.find({ user: user.id, shop: params.shop })
+        .then(notFound(res))
+        .then((rooms) => {
+            if (rooms.length > 0) {
+                const room = rooms[0]
+                res.status(200).json(room)
+            }
+        })
 }
 
 export const show = ({ params, user }, res, next) => {
