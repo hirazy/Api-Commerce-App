@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy, createResourceMessage } from './controller'
+import { create, index, show, update, destroy, createResourceMessage, getMessageByShop, getLoadMore } from './controller'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import Message, { schema } from './model'
@@ -23,7 +23,7 @@ const router = new Router()
  */
 router.post('/',
     token({ required: true, roles: ['user'] }),
-    body({ room, isResource, content }),
+    body({ shop, content }),
     create)
 
 /**
@@ -37,11 +37,36 @@ router.post('/',
  * @apiSuccess (Success 201) {Object} user Current user's data.
  * @apiError 401 Master access only or invalid credentials.
  */
-router.post('/resource',
-    master(),
+router.post('/resource/:shop',
+    token({ required: true, roles: ['user'] }),
     upload.array('image', 4),
     createResourceMessage
 )
+
+/**
+ * @api {post} /messages Create message
+ * @apiName CreateMessage
+ * @apiGroup Message
+ * @apiSuccess {Object} message Message's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Message not found.
+ */
+router.get('/more/:room/:length',
+    token({ required: true, roles: ['user'] }),
+    getLoadMore)
+
+
+/**
+ * @api {post} /messages Create message
+ * @apiName CreateMessage
+ * @apiGroup Message
+ * @apiSuccess {Object} message Message's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Message not found.
+ */
+router.get('/shop/:shop',
+    token({ required: true, roles: ['user'] }),
+    getMessageByShop)
 
 /**
  * @api {get} /messages Retrieve messages

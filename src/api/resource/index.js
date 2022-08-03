@@ -44,20 +44,6 @@ router.post('/',
     master(),
     upload.array('image', 4),
     create
-    //  async(req, res) => {
-
-    //     const files = req.files
-    //     console.log(files.length)
-    //     let listFiles = []
-    //     for (const file of files) {
-    //         const result = await uploadFile(file)
-    //         await unlinkFile(file.path)
-    //         const description = req.body.description
-    //         listFiles.push(result.key)
-    //     }
-
-    //     res.status(200).json(listFiles);
-    // }
 )
 
 /**

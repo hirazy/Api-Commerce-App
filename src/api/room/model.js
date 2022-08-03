@@ -35,5 +35,7 @@ roomSchema.methods = {
 
 const model = mongoose.model('Room', roomSchema)
 
+roomSchema.index({ user: 1, shop: 1 }, { unique: true })
+
 export const schema = model.schema
 export default model

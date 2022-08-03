@@ -72,8 +72,7 @@ router.put('/:id',
  * @apiError 404 Order not found.
  */
 router.delete('/:id',
-    master(),
-    token({ required: true, roles: ['admin'] }),
+    token({ required: true, roles: ['user'] }),
     destroy)
 
 export default router

@@ -59,9 +59,14 @@ export const update = ({ body, params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const destroy = ({ params }, res, next) =>
-    OrderItem.findById(params.id)
-    .then(notFound(res))
-    .then((orderItem) => orderItem ? orderItem.remove() : null)
-    .then(success(res, 204))
-    .catch(next)
+export const destroy = ({ params, user }, res, next) => {
+    if (params.id == 'me') {
+
+    } else {
+        OrderItem.findById(params.id)
+            .then(notFound(res))
+            .then((orderItem) => orderItem ? orderItem.remove() : null)
+            .then(success(res, 204))
+            .catch(next)
+    }
+}

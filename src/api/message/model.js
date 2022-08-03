@@ -11,11 +11,11 @@ const messageSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
-    resource: {
+    resources: [{
         type: Schema.Types.ObjectId,
         required: false,
         ref: 'Resource'
-    },
+    }],
     content: {
         type: String,
         default: ""
@@ -29,6 +29,22 @@ const messageSchema = new Schema({
 
 messageSchema.methods = {
     view(full) {
+        if (this.isResource) {
+            const view = {
+                // simple view
+                id: this.id,
+                room: this.room,
+                sender: this.sender,
+                resources: this.resources,
+                isResource: this.isResource,
+                createdAt: this.createdAt,
+            }
+            return full ? {
+                ...view
+                // add properties for a full view   
+            } : view
+        }
+
         const view = {
             // simple view
             id: this.id,

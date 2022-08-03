@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy, getShuffle } from './controller'
+import { create, index, show, update, destroy, getShuffle, getDetail, getRoomByShop } from './controller'
 import { master, token } from '../../services/passport'
 import Room, { schema } from './model'
 
@@ -55,9 +55,21 @@ router.get('/shuffle',
  * @apiError 404 Room not found.
  */
 router.get('/detail/:id',
-    master(),
     token({ required: true }),
-    show)
+    getDetail)
+
+
+/**
+ * @api {get} /rooms/:id Retrieve room
+ * @apiName RetrieveRoom
+ * @apiGroup Room
+ * @apiSuccess {Object} room Room's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Room not found.
+ */
+router.get('/shop/:shop',
+    token({ required: true }),
+    getRoomByShop)
 
 /**
  * @api {put} /rooms/:id Update room
