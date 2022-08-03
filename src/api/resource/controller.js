@@ -36,6 +36,18 @@ export const create = async(req, res, next) => {
     res.status(200).json(listFiles);
 }
 
+export const getResourceById = ({ params }, res, next) => {
+    Resource.findById(params.id)
+        .then((resource) => resource ? resource.view() : null)
+        .then((resource) => {
+            const key = resource.key
+            const readStream = getFileStream(key)
+
+            readStream.pipe(res)
+        })
+        .catch(next)
+}
+
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Resource.find(query, select, cursor)
     .then((resources) => resources.map((resource) => resource.view()))

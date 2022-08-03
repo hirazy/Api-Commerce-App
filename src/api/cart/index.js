@@ -105,6 +105,7 @@ router.put('/:id',
 
 /**
  * @api {delete} /carts/:id Delete cart
+ * @api {delete all of user} /carts/me Delete cart of user
  * @apiName DeleteCart
  * @apiGroup Cart
  * @apiSuccess (Success 204) 204 No Content.

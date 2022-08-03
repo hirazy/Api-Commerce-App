@@ -138,15 +138,29 @@ export const update = ({ body, params }, res, next) => {
 }
 
 
+
 export const destroy = ({ params, user }, res, next) => {
-    Cart.findById(params.id)
-        .then(notFound(res))
-        .then((cart) => cart ? cart.remove() : null)
-        .then((cart) => {
-            res.status(204).json({
-                'code': 204,
-                'status': 'Deleted successfully!'
+    if (params.id == 'me') {
+        Cart.find({ user: user.id })
+            .then(notFound(res))
+            .then((carts) => carts.map((cart) => cart ? cart.remove() : null))
+            .then((carts) => {
+                res.status(204).json({
+                    'code': 204,
+                    'status': 'Deleted successfully!'
+                })
             })
-        })
-        .catch(next)
+            .catch(next)
+    } else {
+        Cart.findById(params.id)
+            .then(notFound(res))
+            .then((cart) => cart ? cart.remove() : null)
+            .then((cart) => {
+                res.status(204).json({
+                    'code': 204,
+                    'status': 'Deleted successfully!'
+                })
+            })
+            .catch(next)
+    }
 }

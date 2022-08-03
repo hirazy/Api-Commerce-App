@@ -64,9 +64,25 @@ export const update = ({ body, params }, res, next) =>
     .then(success(res))
     .catch(next)
 
-export const destroy = ({ params }, res, next) =>
-    Order.findById(params.id)
-    .then(notFound(res))
-    .then((order) => order ? order.remove() : null)
-    .then(success(res, 204))
-    .catch(next)
+export const destroy = async({ params, user }, res, next) => {
+    if (params.id == 'me') {
+        Order.find({ user: user.id })
+            .then(async(orders) => {
+                for (let order of orders) {
+                    await OrderItem.deleteMany({ order: order.id })
+                }
+            })
+            .then((orders) => {
+                res.status(204).json({
+                    'status': 'Delete successfully!'
+                })
+            })
+            .catch(next)
+    } else {
+        Order.findById(params.id)
+            .then(notFound(res))
+            .then((order) => order ? order.remove() : null)
+            .then(success(res, 204))
+            .catch(next)
+    }
+}

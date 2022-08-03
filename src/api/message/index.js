@@ -1,9 +1,13 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, createResourceMessage, getMessageByShop, getLoadMore } from './controller'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import Message, { schema } from './model'
+const multer = require('multer')
+const fs = require("fs");
+const util = require('util')
+const upload = multer({ dest: 'uploads/' })
 
 const { sender, shop, resource, content, room, isResource } = schema.tree
 
@@ -19,8 +23,50 @@ const router = new Router()
  */
 router.post('/',
     token({ required: true, roles: ['user'] }),
-    body({ room, isResource, content }),
+    body({ shop, content }),
     create)
+
+/**
+ * @api {post} /image Upload image
+ * @apiName Upload Image
+ * @apiGroup Image
+ * @apiPermission master
+ * @apiHeader {String} Upload image to folder /uploads 
+ * @apiParam {String} access_token Master access_token.
+ * @apiSuccess (Success 201) {String} name of saved file to be passed to other requests.
+ * @apiSuccess (Success 201) {Object} user Current user's data.
+ * @apiError 401 Master access only or invalid credentials.
+ */
+router.post('/resource/:shop',
+    token({ required: true, roles: ['user'] }),
+    upload.array('image', 4),
+    createResourceMessage
+)
+
+/**
+ * @api {post} /messages Create message
+ * @apiName CreateMessage
+ * @apiGroup Message
+ * @apiSuccess {Object} message Message's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Message not found.
+ */
+router.get('/more/:room/:length',
+    token({ required: true, roles: ['user'] }),
+    getLoadMore)
+
+
+/**
+ * @api {post} /messages Create message
+ * @apiName CreateMessage
+ * @apiGroup Message
+ * @apiSuccess {Object} message Message's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Message not found.
+ */
+router.get('/shop/:shop',
+    token({ required: true, roles: ['user'] }),
+    getMessageByShop)
 
 /**
  * @api {get} /messages Retrieve messages
