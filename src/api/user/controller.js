@@ -48,7 +48,9 @@ export const create = ({ bodymen: { body } }, res, next) =>
             )
     })
     .catch((err) => {
-        /* istanbul ignore else */
+        console.log('Hello')
+            /* istanbul ignore else */
+        console.log(err.message)
         if (err.name === 'MongoError' && err.code === 11000) {
             res.status(409).json({
                 valid: false,
@@ -70,6 +72,7 @@ export const createByEmail = ({ bodymen: { body } }, res, next) =>
     .catch((err) => {
         /* istanbul ignore else */
         if (err.name === 'MongoError' && err.code === 11000) {
+            console.log(err.message)
             res.status(409).json({
                 valid: false,
                 param: 'email',
@@ -79,11 +82,6 @@ export const createByEmail = ({ bodymen: { body } }, res, next) =>
             next(err)
         }
     })
-
-export const respect = ({}, res, next) => {
-
-}
-
 
 export const update = ({ bodymen: { body }, params, user }, res, next) =>
     User.findById(params.id === 'me' ? user.id : params.id)

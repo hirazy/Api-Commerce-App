@@ -63,6 +63,8 @@ passport.use('password', new BasicStrategy((emailOrPhone, password, done) => {
 
     let body = checkEmail ? { email: emailOrPhone } : { phone: emailOrPhone }
 
+    console.log(checkEmail.toString())
+
     User.findOne(body).then((user) => {
         if (!user) {
             done(null)

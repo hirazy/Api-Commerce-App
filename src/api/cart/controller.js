@@ -137,8 +137,6 @@ export const update = ({ body, params }, res, next) => {
         .catch(next)
 }
 
-
-
 export const destroy = ({ params, user }, res, next) => {
     if (params.id == 'me') {
         Cart.find({ user: user.id })

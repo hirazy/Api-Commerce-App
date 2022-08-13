@@ -108,6 +108,25 @@ export const createResourceMessage = async({ user, params, files }, res, next) =
         .catch(next)
 }
 
+export const createShopMessage = ({ bodymen: { body }, params }, res, next) => {
+    Room.findById(params.room)
+        .then(notFound(res))
+        .then((room) => {
+            const messageBody = {
+                isResource: false,
+                sender: room.shop,
+                room: room.id,
+                content: body.content
+            }
+            Message.create(messageBody)
+                .then((message) => {
+                    res.status(200).json(message.view())
+                })
+        })
+        .catch(next)
+}
+
+
 export const getMessageByShop = ({ user, params }, res, next) => {
     Room.find({ user: user.id, shop: params.shop })
         .then((rooms) => {

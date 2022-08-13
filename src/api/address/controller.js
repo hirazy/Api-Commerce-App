@@ -122,6 +122,27 @@ export const update = ({ body, params, user }, res, next) => {
         .catch(next)
 }
 
+export const changeDefaultAddress = ({ params, user }, res, next) => {
+    Address.findById(params.id)
+        .then(notFound(res))
+        .then((address) => {
+            if (address.user != user.id) {
+                res.status(401).json({
+                    'status': 'UnAuthorized. You cannot change other\'s address'
+                })
+            } else {
+                if (user.address != address.id) {
+                    user.address = address.id
+                    user.save()
+                }
+            }
+            return address
+        })
+        .then((address) => address ? address.view() : null)
+        .then(success(res))
+        .catch(next)
+}
+
 
 export const destroy = ({ params, user }, res, next) => {
     Address.findById(params.id)
