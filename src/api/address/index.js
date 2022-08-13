@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy, getAllUser, getDefault, getAddress } from './controller'
+import { create, index, show, update, destroy, getAllUser, getDefault, getAddress, changeDefaultAddress } from './controller'
 import { master, token } from '../../services/passport'
 import Address, { schema } from './model'
 
@@ -102,6 +102,18 @@ router.put('/:id',
     token({ required: true, roles: ['user'] }),
     body({ name, phone, city, street, isHome, isDefault }),
     update)
+
+/**
+ * @api {put} /addresses/default/:id Change default address
+ * @apiName UpdateAddress
+ * @apiGroup Address
+ * @apiSuccess {Object} address Address's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Address not found.
+ */
+router.put('/default/:id',
+    token({ required: true, roles: ['user'] }),
+    changeDefaultAddress)
 
 /**
  * @api {delete} /addresses/:id Delete address

@@ -5,6 +5,10 @@ import Cart, { cartItemSchema } from '../cart/model'
 
 export const create = async({ user, body }, res, next) => {
 
+    if (body.address == null && body.address != '') {
+        return res.status()
+    }
+
     let order = await Order.create({
             user: user.id,
             totalCost: body.totalCost,
