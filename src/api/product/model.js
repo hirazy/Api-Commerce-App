@@ -159,6 +159,8 @@ productSchema.methods = {
 
 productSchema.plugin(random)
 
+productSchema.index({ name: 'text' });
+
 const model = mongoose.model('Product', productSchema)
 
 export const schema = model.schema

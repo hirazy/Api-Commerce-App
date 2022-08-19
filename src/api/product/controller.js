@@ -138,17 +138,11 @@ export const searchByName = ({ params }, res, next) =>
     .catch(next)
 
 export const searchByKeyWord = ({ params }, res, next) => {
-    // Product.populate(
-    //         'name', params.name
-    //     )
-    //     .then(notFound(res))
-    //     .then((products) => products.map((product) => product.view()))
-    //     .catch(next)
-    // var options = RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
-    // var regex = new Regex(pattern, options);
-    // var filter = Builders < Translation > .Filter.Regex(t => t.Vietnamese, new BsonRegularExpression(regex));
-
-    Product.find({ 'name': { $regex: params.name } })
+    Product.find(
+            // { 'name': { $regex: params.name } }
+            { $text: { $search: params.name } }
+            // { $name: { $search: params.name } }
+        )
         .then((products) => products.map((product) => product.view()))
         .then((products) => {
             res.status(200).json(products)
@@ -163,16 +157,12 @@ export const searchByCategory = ({ params }, res, next) =>
     )
 
 export const getAuthenticationProducts = () => {
-    // zip.x
     const zipData = zip.file('data_home')
-
     Product.populate("")
         .find()
 }
 
 export const getByCategory = ({}, res, next) => {
-    // Product
-    //     .populate("category")
     Product.populate("catrgory")
         .find()
 }
