@@ -1,8 +1,19 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
+import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, getPaymentUser, connectMomoPayment, createMomoPayment } from './controller'
 import Payment, { schema } from './model'
+
+const {
+    amount,
+    extraData,
+    ipnUrl,
+    redirectUrl,
+    orderId,
+    requestType,
+    callbackToken,
+} = schema.tree
 
 const router = new Router()
 
@@ -28,9 +39,49 @@ router.post('/',
  * @apiError 404 Payment not found.
  */
 router.post('/momo',
-    master(),
     token({ required: true, roles: ['user', 'admin'] }),
-    create)
+    body({ amount, extraData, ipnUrl, redirectUrl, orderId, requestType }),
+    connectMomoPayment)
+
+/**
+ * @api {post} /payments Create payment
+ * @apiName CreatePayment
+ * @apiGroup Payment
+ * @apiSuccess {Object} payment Payment's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Payment not found.
+ */
+router.post('/momo/token',
+    token({ required: true, roles: ['user', 'admin'] }),
+    body({ callbackToken }),
+    createMomoPayment)
+
+/**
+ * @api {post} /payments Create payment
+ * @apiName CreatePayment
+ * @apiGroup Payment
+ * @apiSuccess {Object} payment Payment's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Payment not found.
+ */
+router.post('/momo/ipn/',
+    token({ required: true, roles: ['user', 'admin'] }),
+    body({ amount, extraData, ipnUrl, redirectUrl, orderId, requestType }),
+    connectMomoPayment)
+
+// /**
+//  * @api {get} /payments Retrieve payments
+//  * @apiName RetrievePayments
+//  * @apiGroup Payment
+//  * @apiUse listParams
+//  * @apiSuccess {Object[]} payments List of payments.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  */
+// router.get('/',
+//     master(),
+//     token({ required: true, roles: ['admin'] }),
+//     query(),
+//     index)
 
 /**
  * @api {get} /payments Retrieve payments
@@ -41,10 +92,9 @@ router.post('/momo',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
-    master(),
-    token({ required: true, roles: ['admin'] }),
-    query(),
-    index)
+    token({ required: true, roles: ['user'] }),
+    getPaymentUser
+)
 
 /**
  * @api {get} /payments/:id Retrieve payment

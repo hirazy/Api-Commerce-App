@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema } from 'mongoose';
 
 const paymentSchema = new Schema({
     user: {
@@ -8,15 +8,32 @@ const paymentSchema = new Schema({
     },
     payment_type: {
         type: String,
-        required: true
+        required: false,
+        enum: ['Momo'],
+        default: 'Momo'
+    },
+    payment_status: {
+        type: String,
+        required: true,
+        enum: ['Token', 'Payment'],
+        default: 'Payment'
     },
     provider: {
         type: String,
-        required: true
+        required: true,
+        default: ''
     },
     account_no: {
         type: String,
         required: true,
+    },
+    requestId: {
+        type: String,
+        required: false,
+    },
+    accessToken: {
+        type: String,
+        required: false
     },
     expiry: {
         type: Date,

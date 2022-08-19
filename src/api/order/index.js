@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { master, token } from '../../services/passport'
 import { middleware as body } from 'bodymen'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, createOrderPayment } from './controller'
 import Order, { schema } from './model'
 const { address, carts, totalCost } = schema.tree
 
@@ -19,6 +19,20 @@ const router = new Router()
  * @apiError 404 Order not found.
  */
 router.post('/',
+    // master(),
+    token({ required: true, roles: ["user"] }),
+    body({ address, carts, totalCost }),
+    create)
+
+/**
+ * @api {post} /orders Create order
+ * @apiName CreateOrder
+ * @apiGroup Order
+ * @apiSuccess {Object} order Order's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Order not found.
+ */
+router.post('/payment',
     // master(),
     token({ required: true, roles: ["user"] }),
     body({ address, carts, totalCost }),

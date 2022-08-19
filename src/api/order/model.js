@@ -19,6 +19,11 @@ const orderSchema = new Schema({
     //     required: true
     // },
     // transaction
+    purchase: {
+        required: false,
+        type: Schema.Types.ObjectId,
+        ref: 'Purchase'
+    },
     totalCost: {
         type: Number,
         required: true

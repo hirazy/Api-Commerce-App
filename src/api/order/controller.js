@@ -1,7 +1,9 @@
 import { success, notFound } from '../../services/response/'
 import Order, { schema } from './model'
 import OrderItem, { oderItemSchema } from '../order_item/model'
+import Purchase, { purchaseSchema } from '../purchase/model'
 import Cart, { cartItemSchema } from '../cart/model'
+import Payment, { paymentSchema } from '../payment/model'
 
 export const create = async({ user, body }, res, next) => {
 
@@ -40,6 +42,10 @@ export const create = async({ user, body }, res, next) => {
     res.status(200).json(order)
 }
 
+
+export const createOrderPayment = ({ bodymen: { body } }, res, next) => {
+
+}
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     Order.find(query, select, cursor)
