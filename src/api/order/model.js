@@ -5,20 +5,11 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId,
         required: true
     },
-    // orders: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'OrderItem'
-    // }],
     address: {
         required: true,
         type: Schema.Types.ObjectId,
         ref: "Address",
     },
-    // reference: {
-    //     type: String,
-    //     required: true
-    // },
-    // transaction
     purchase: {
         required: false,
         type: Schema.Types.ObjectId,

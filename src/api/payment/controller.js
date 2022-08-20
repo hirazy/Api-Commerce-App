@@ -1,7 +1,9 @@
-import { success, notFound } from '../../services/response/'
-import { connectMomoWallet, requestTokenConnect } from '../../services/momo'
-import { decrypt } from '../../services/encrypt'
-import Payment, { schema } from './model'
+import { decrypt } from '../../services/encrypt';
+import { connectMomoWallet, requestTokenConnect } from '../../services/momo';
+import { notFound, success } from '../../services/response/';
+import { IsJsonString } from '../../services/util';
+import { momoSecretKey } from '../../config'
+import Payment from './model';
 
 export const create = ({ body }, res, next) =>
     Payment.create(body)
@@ -20,14 +22,24 @@ export const connectMomoPayment = async({ bodymen: { body }, user }, res, next) 
 
     responseConnect.on('response', (response) => {
         response.setEncoding('utf8');
-        console.log(response.statusCode)
-        response.on('data', (body) => {
+        response.on('data', (bodyResponse) => {
             if (response.statusCode == 200) {
-                let bodyConnect = JSON.parse(body)
-                res.status(200).json(bodyConnect)
+                console.log('on Data')
+                if (IsJsonString(bodyResponse)) {
+                    let bodyConnect = JSON.parse(bodyResponse)
+
+                    Payment.create({
+                            user: user.id,
+                            payment_status: 'token',
+                            orderId: bodyConnect.orderId,
+                            requestId: bodyConnect.requestId
+                        })
+                        .then((payment) => {
+                            res.status(200).json(bodyConnect)
+                        })
+                }
             }
         })
-
         response.on('error', (err) => {
             console.log('Error' + JSON.stringify(err))
             res.status(404).json()
@@ -42,27 +54,43 @@ export const createMomoPayment = async({ bodymen: { body }, user }, res, next) =
         partnerClientId: user.id
     }
 
-    let responseRequestToken = requestTokenConnect(bodyRequestToken)
+    console.log(bodyRequestToken)
 
-    // Payment.find()
+    let responseRequestToken = requestTokenConnect(bodyRequestToken)
 
     responseRequestToken.on('response', (response) => {
         response.setEncoding('utf8');
         console.log(response.statusCode)
-        response.on('data', (body) => {
-            console.log('Body: ');
-            console.log(body);
+        response.on('data', (bodyResponse) => {
+            console.log('Body: ' + response.statusCode);
+            console.log(bodyResponse);
             if (response.statusCode == 200) {
-                console.log(JSON.parse(body))
 
-                const bodeRequestToken = JSON.parse(body)
+                if (IsJsonString(bodyResponse)) {
+                    console.log(JSON.parse(bodyResponse))
 
-                /**
-                 * value
-                 * userAlias	
-                 * profileId
-                 */
-                const responseToken = decrypt(body.aesToken)
+                    const bodeRequestToken = JSON.parse(bodyResponse)
+
+                    /**
+                     * value
+                     * userAlias	
+                     * profileId
+                     */
+                    const responseToken = decrypt(bodeRequestToken.aesToken, momoSecretKey)
+
+                    Payment.create({
+                            user: user.id,
+                            payment_status: 'token',
+                            requestId: bodeRequestToken.requestId,
+                            orderId: bodeRequestToken.orderId,
+                            accessToken: responseToken.vallue
+                        })
+                        .then((payment) => {
+                            if (payment != null) {
+                                res.status(200).json(payment.view())
+                            }
+                        })
+                }
 
                 // Payment.create({})
                 //     .then((payment) => {})
@@ -76,10 +104,12 @@ export const createMomoPayment = async({ bodymen: { body }, user }, res, next) =
 
 }
 
-export const getPaymentUser = ({ user, body }, res, next) => {
-    Payment.find({ user: user.id })
+export const getPaymentUser = ({ user }, res, next) => {
+    Payment.find({ user: user.id, payment_status: 'payment' })
         .then((payments) => payments.map((payment) => payment.view()))
-        .then(success(res, 201))
+        .then((payments) => {
+            res.status(200).json(payments[0])
+        })
         .catch(next)
 }
 

@@ -18,7 +18,7 @@ const urlTokenizationPay = '/v2/gateway/api/tokenization/pay'
 export const connectMomoWallet = (body) => {
 
     let requestId = uuidv4()
-    let orderInfo = uuidv4()
+    let orderInfo = "Link Wallet"
     let amount = body.amount
     let orderId = uuidv4()
     let redirectUrl = body.redirectUrl;
@@ -26,8 +26,6 @@ export const connectMomoWallet = (body) => {
     let extraData = body.extraData
     let requestType = body.requestType
     let partnerClientId = body.partnerClientId
-
-    console.log(momoAccessKey + " " + momoSecretKey)
 
     var rawSignature = "accessKey=" + momoAccessKey +
         "&amount=" + amount +

@@ -17,18 +17,18 @@ const {
 
 const router = new Router()
 
-/**
- * @api {post} /payments Create payment
- * @apiName CreatePayment
- * @apiGroup Payment
- * @apiSuccess {Object} payment Payment's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Payment not found.
- */
-router.post('/',
-    master(),
-    token({ required: true, roles: ['user'] }),
-    create)
+// /**
+//  * @api {post} /payments Create payment
+//  * @apiName CreatePayment
+//  * @apiGroup Payment
+//  * @apiSuccess {Object} payment Payment's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Payment not found.
+//  */
+// router.post('/',
+//     master(),
+//     token({ required: true, roles: ['user'] }),
+//     create)
 
 /**
  * @api {post} /payments Create payment
@@ -39,35 +39,35 @@ router.post('/',
  * @apiError 404 Payment not found.
  */
 router.post('/momo',
-    token({ required: true, roles: ['user', 'admin'] }),
+    token({ required: true, roles: ['user'] }),
     body({ amount, extraData, ipnUrl, redirectUrl, orderId, requestType }),
     connectMomoPayment)
 
-/**
- * @api {post} /payments Create payment
- * @apiName CreatePayment
- * @apiGroup Payment
- * @apiSuccess {Object} payment Payment's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Payment not found.
- */
+// /**
+//  * @api {post} /payments Create payment
+//  * @apiName CreatePayment
+//  * @apiGroup Payment
+//  * @apiSuccess {Object} payment Payment's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Payment not found.
+//  */
 router.post('/momo/token',
     token({ required: true, roles: ['user', 'admin'] }),
-    body({ callbackToken }),
+    body({ callbackToken, orderId }),
     createMomoPayment)
 
-/**
- * @api {post} /payments Create payment
- * @apiName CreatePayment
- * @apiGroup Payment
- * @apiSuccess {Object} payment Payment's data.
- * @apiError {Object} 400 Some parameters may contain invalid values.
- * @apiError 404 Payment not found.
- */
-router.post('/momo/ipn/',
-    token({ required: true, roles: ['user', 'admin'] }),
-    body({ amount, extraData, ipnUrl, redirectUrl, orderId, requestType }),
-    connectMomoPayment)
+// /**
+//  * @api {post} /payments Create payment
+//  * @apiName CreatePayment
+//  * @apiGroup Payment
+//  * @apiSuccess {Object} payment Payment's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Payment not found.
+//  */
+// router.post('/momo/ipn/',
+//     token({ required: true, roles: ['user', 'admin'] }),
+//     body({ amount, extraData, ipnUrl, redirectUrl, orderId, requestType }),
+//     connectMomoPayment)
 
 // /**
 //  * @api {get} /payments Retrieve payments
