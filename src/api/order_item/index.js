@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy, getOrderbyUser } from './controller'
+import { create, index, show, update, destroy, getOrderbyUser, getDetailOrder, updateStatus, cancelOrder } from './controller'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import OrderItem, { schema } from './model'
 
@@ -61,6 +61,31 @@ router.get('/user',
     getOrderbyUser)
 
 /**
+ * @api {get} /order_items Retrieve order items
+ * @apiName RetrieveOrderItems
+ * @apiGroup OrderItem
+ * @apiUse listParams
+ * @apiSuccess {Object[]} orderItems List of order items.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/detail/:id',
+    token({ required: true, roles: ["user"] }),
+    getDetailOrder)
+
+// /**
+//  * @api {put} /order_items/:id Update order item
+//  * @apiName UpdateOrderItem
+//  * @apiGroup OrderItem
+//  * @apiSuccess {Object} orderItem Order item's data.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  * @apiError 404 Order item not found.
+//  */
+// router.put('/:id',
+//     master(),
+//     token({ required: true, roles: ["admin"] }),
+//     update)
+
+/**
  * @api {put} /order_items/:id Update order item
  * @apiName UpdateOrderItem
  * @apiGroup OrderItem
@@ -68,10 +93,24 @@ router.get('/user',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  * @apiError 404 Order item not found.
  */
-router.put('/:id',
-    master(),
+router.put('/status/:id',
+    // master(),
     token({ required: true, roles: ["admin"] }),
-    update)
+    updateStatus)
+
+
+/**
+ * @api {put} /order_items/:id Update order item
+ * @apiName UpdateOrderItem
+ * @apiGroup OrderItem
+ * @apiSuccess {Object} orderItem Order item's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Order item not found.
+ */
+router.put('/cancel/:id',
+    token({ required: true, roles: ["admin"] }),
+    cancelOrder)
+
 
 /**
  * @api {delete} /order_items/:id Delete order item

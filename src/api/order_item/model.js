@@ -32,9 +32,10 @@ const orderItemSchema = new Schema({
     status: {
         required: false,
         type: String,
-        enum: ['UNCONFIRM', 'DELIVERING', 'DELIVERED'],
+        enum: ['UNCONFIRM', 'WAITING_PICK_UP', 'DELIVERING', 'DELIVERED', 'CANCELLED', 'RETURN'],
         default: 'UNCONFIRM'
     },
+    time: [],
     isPaid: {
         type: Boolean,
         required: false,
@@ -55,7 +56,8 @@ orderItemSchema.methods = {
             product: this.product,
             quantity: this.quantity,
             message: this.message,
-            price: this.price
+            price: this.price,
+            status: this.status
         }
 
         return full ? {
@@ -65,8 +67,23 @@ orderItemSchema.methods = {
             // add properties for a full view
         } : view
     },
+    viewTimeLine() {
+        const view = {
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+        }
+
+        return view
+    },
     getAllPrice() {
         return quantity * price
+    },
+    changeStatus(statusOrder) {
+        if (this.status != 'CANCELLED' &&
+            this.status != 'DELIVERED' &&
+            this.status != 'RETURN') {
+            this.status = statusOrder
+        }
     }
 }
 

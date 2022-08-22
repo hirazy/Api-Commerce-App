@@ -38,6 +38,20 @@ export const getOrderbyUser = async({ user }, res, next) => {
     res.status(200).json(orderRes)
 }
 
+export const getDetailOrder = async({ params }, res, next) => {
+    let orderItem = await OrderItem.findById(params.id)
+        .then((orderItem) => {
+
+        })
+
+    let order = await Order.findById(orderItem.order)
+        .then((order) => {})
+}
+
+export const getTimeLine = ({}, res, next) => {
+
+}
+
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     OrderItem.find(query, select, cursor)
     .then((orderItems) => orderItems.map((orderItem) => orderItem.view()))
@@ -58,6 +72,27 @@ export const update = ({ body, params }, res, next) =>
     .then((orderItem) => orderItem ? orderItem.view(true) : null)
     .then(success(res))
     .catch(next)
+
+export const updateStatus = ({ body, user, params }, res, next) => {
+    OrderItem.findById(params.id)
+        .then(notFound(res))
+        .then((orderItem) => orderItem ? Object.assign(orderItem, body).save() : null)
+        .then((orderItem) => orderItem ? orderItem.view(true) : null)
+        .then(success(res))
+        .catch(next)
+}
+
+export const cancelOrder = ({ user, params }, res, next) => {
+    OrderItem.findById(params.id)
+        .then(notFound(res))
+        .then((orderItem) => {
+            orderItem.changeStatus('CANCELLED')
+            orderItem.save()
+        })
+        .then((orderItem) => orderItem ? orderItem.view(true) : null)
+        .then(success(res))
+        .catch(next)
+}
 
 export const destroy = ({ params, user }, res, next) => {
     if (params.id == 'me') {

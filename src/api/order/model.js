@@ -18,7 +18,7 @@ const orderSchema = new Schema({
     totalCost: {
         type: Number,
         required: true
-    }
+    },
 }, { timestamps: true })
 
 orderSchema.methods = {

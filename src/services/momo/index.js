@@ -198,3 +198,71 @@ export const purchaseByToken = (body) => {
     req.write(requestBody);
     return req
 }
+
+export const returnOrderCancel = (body) => {
+    let requestId = uuidv4()
+    let orderInfo = uuidv4()
+    let amount = body.amount
+    let orderId = body.orderId
+    let redirectUrl = body.redirectUrl;
+    let ipnUrl = "https://callback.url/notify";
+    let extraData = body.extraData
+    let partnerClientId = body.partnerClientId
+    let token = body.token
+
+    var rawSignature = "accessKey=" + momoAccessKey +
+        "&amount=" + amount +
+        "&extraData=" + extraData +
+        "&ipnUrl=" + ipnUrl +
+        "&orderId=" + orderId +
+        "&orderInfo=" + orderInfo +
+        "&partnerClientId=" + partnerClientId +
+        "&partnerCode=" + momoPartnerCode +
+        "&requestId=" + requestId +
+        "&token=" + token
+
+    var signature = crypto.createHmac('sha256', momoSecretKey)
+        .update(rawSignature)
+        .digest('hex');
+
+    let tokenEncrypted = encryptRSA({ token: token })
+
+    const requestBody = JSON.stringify({
+        "token": tokenEncrypted,
+        "partnerCode": momoPartnerCode,
+        "partnerName": momoPartnerName,
+        "storeId": momoPartnerCode,
+        "requestId": requestId,
+        "amount": amount,
+        "orderId": orderId,
+        "ipnUrl": ipnUrl,
+        "redirectUrl": redirectUrl,
+        "autoCapture": true,
+        "partnerClientId": partnerClientId,
+        "orderInfo": orderInfo,
+        "extraData": "",
+        "lang": "vi",
+        "signature": signature
+    })
+
+    const options = {
+        hostname: hostNameMomo,
+        port: 443,
+        path: urlTokenizationPay,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(requestBody)
+        }
+    }
+
+    const req = https.request(options)
+
+    req.on('error', (e) => {
+        console.log(`problem with request: ${e.message}`);
+    });
+
+    console.log("Sending....")
+    req.write(requestBody);
+    return req
+}
