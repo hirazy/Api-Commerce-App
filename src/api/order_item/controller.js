@@ -52,6 +52,29 @@ export const getTimeLine = ({}, res, next) => {
 
 }
 
+export const getStatisticOrder = async({ user }, res, next) => {
+    let orders = await Order.find({ user: user.id })
+        .then((orders) => orders.map((order) => order.view()))
+        .catch(next)
+
+    let orderRes = []
+        // for (let order of orders) {
+    let orderItems = await OrderItem.find({ //query today up to tonight
+        created_on: {
+            $gte: new Date(2012, 7, 14),
+            $lt: new Date(2022, 8, 23)
+        }
+    })
+
+    res.status(200).json(orderItems)
+        // }
+        // res.status(200).json(orderRes)
+}
+
+export const getStatisticCategory = ({ user }, res, next) => {
+
+}
+
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
     OrderItem.find(query, select, cursor)
     .then((orderItems) => orderItems.map((orderItem) => orderItem.view()))

@@ -39,7 +39,7 @@ export const connectMomoWallet = (body) => {
         "&requestId=" + requestId +
         "&requestType=" + requestType
 
-    var signature = crypto.createHmac('sha256', momoSecretKey)
+    let signature = crypto.createHmac('sha256', momoSecretKey)
         .update(rawSignature)
         .digest('hex');
 

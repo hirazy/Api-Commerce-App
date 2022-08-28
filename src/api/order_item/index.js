@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
-import { create, index, show, update, destroy, getOrderbyUser, getDetailOrder, updateStatus, cancelOrder } from './controller'
+import { create, index, show, update, destroy, getOrderbyUser, getDetailOrder, getStatisticOrder, updateStatus, cancelOrder } from './controller'
 import { password as passwordAuth, master, token } from '../../services/passport'
 import OrderItem, { schema } from './model'
 
@@ -71,6 +71,31 @@ router.get('/user',
 router.get('/detail/:id',
     token({ required: true, roles: ["user"] }),
     getDetailOrder)
+
+/**
+ * @api {get} /order_items Retrieve order items
+ * @apiName RetrieveOrderItems
+ * @apiGroup OrderItem
+ * @apiUse listParams
+ * @apiSuccess {Object[]} orderItems List of order items.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/statistic/week',
+    token({ required: true, roles: ["user"] }),
+    getStatisticOrder)
+
+// /**
+//  * @api {get} /order_items Retrieve order items
+//  * @apiName RetrieveOrderItems
+//  * @apiGroup OrderItem
+//  * @apiUse listParams
+//  * @apiSuccess {Object[]} orderItems List of order items.
+//  * @apiError {Object} 400 Some parameters may contain invalid values.
+//  */
+// router.get('/statistic/',
+//     token({ required: true, roles: ["user"] }),
+//     getDetailOrder)
+
 
 // /**
 //  * @api {put} /order_items/:id Update order item

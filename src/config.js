@@ -39,9 +39,11 @@ const config = {
         momoPartnerCode: requireProcessEnv('MOMO_PARTNER_CODE'),
         momoPartnerName: requireProcessEnv('MOMO_PARTNER_NAME'),
         momoPublicKey: requireProcessEnv('MOMO_PUBLIC_KEY'),
+        macKey: requireProcessEnv('MAC_ZALO_PAY_KEY'),
         googleProjectId: requireProcessEnv('GOOGLE_PROJECT_ID'),
         twilioAccountSID: requireProcessEnv('TWILIO_ACCOUNT_SID'),
         twilioAuthToken: requireProcessEnv('TWILIO_AUTH_TOKEN'),
+        hostNameZalo: requireProcessEnv('HOST_NAME_ZALO'),
         passwordSecret: requireProcessEnv('PASSWORD_SECRET'),
         mongo: {
             options: {

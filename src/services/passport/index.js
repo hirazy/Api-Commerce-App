@@ -77,6 +77,10 @@ passport.use('password', new BasicStrategy((emailOrPhone, password, done) => {
     })
 }))
 
+passport.use('shopPassword', new BasicStrategy((email, password, done) => {
+
+}))
+
 passport.use('master', new BearerStrategy((token, done) => {
     if (token === masterKey) {
         done(null, {})

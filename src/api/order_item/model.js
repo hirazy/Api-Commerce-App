@@ -87,6 +87,29 @@ orderItemSchema.methods = {
     }
 }
 
+orderItemSchema.statics.getLastWeek = function(name, fn) {
+    let oneDay = 24 * 60 * 60
+    let oneWeekAgo = Date.now() - (7 * oneDay)
+
+    let ret = this.collection.group({
+        key: "datestamp",
+        initial: { "createdAt": 0 },
+        reduce: function(doc, prev) {
+            if (doc.createdAt > prev.createdAt) {
+                prev.createdAt = doc.createdAt;
+                prev.score = doc.score;
+
+                // Add other fields, if desired:
+                prev.name = doc.name;
+            }
+            // Process only documents created within past seven day
+        },
+        condition: { "createdAt": { "$gt": oneWeekAgo } }
+    })
+
+    return ret.retval
+}
+
 const model = mongoose.model('OrderItem', orderItemSchema)
 
 export const schema = model.schema

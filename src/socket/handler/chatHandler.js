@@ -7,9 +7,7 @@
 const sendMessageToId = (id, tag, mess) => {
     try {
         global.io.to(id).emit(tag, mess)
-    } catch (error) {
-
-    }
+    } catch (error) {}
 }
 
 /**

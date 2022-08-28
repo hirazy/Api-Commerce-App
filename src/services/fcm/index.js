@@ -31,13 +31,8 @@ admin.initializeApp({
  */
 export const sendFCM = async(deviceToken, message) => {
     admin.messaging().sendToDevice(deviceToken, message)
-        .then((response) => {
-            // Response is a message ID string.
-            console.log('Successfully sent message:', response);
-        })
-        .catch((error) => {
-            console.log('Error sending message:', error);
-        });
+        .then((response) => {})
+        .catch((error) => {});
 }
 
 /**
@@ -46,11 +41,6 @@ export const sendFCM = async(deviceToken, message) => {
  */
 export const sendMultipleFCM = async(deviceTokens, messages) => {
     admin.messaging().sendMulticast(deviceTokens, messages)
-        .then((response) => {
-            // Response is a message ID string.
-            console.log('Successfully sent message:', response);
-        })
-        .catch((error) => {
-            console.log('Error sending message:', error);
-        });
+        .then((response) => {})
+        .catch((error) => {});
 }
