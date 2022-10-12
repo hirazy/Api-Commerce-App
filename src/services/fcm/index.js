@@ -29,10 +29,11 @@ admin.initializeApp({
  * @param {*} deviceTokens : List Device Tokens of Users
  * @param {*} messages : List Messages 
  */
-export const sendFCM = async(deviceToken, message) => {
-    admin.messaging().sendToDevice(deviceToken, message)
-        .then((response) => {})
-        .catch((error) => {});
+export const sendFCM = (deviceToken, message) => {
+    return admin.messaging().sendToDevice(deviceToken, message)
+        // .then((response) => {
+        // })
+        // .catch((error) => {});
 }
 
 /**

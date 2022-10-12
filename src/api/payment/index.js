@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { create, index, show, update, destroy, getPaymentUser, connectMomoPayment, createMomoPayment } from './controller'
+import { create, index, show, update, destroy, getPaymentUser, connectMomoPayment, createMomoPayment, connectZaloPay } from './controller'
 import Payment, { schema } from './model'
 
 const {
@@ -17,18 +17,18 @@ const {
 
 const router = new Router()
 
-// /**
-//  * @api {post} /payments Create payment
-//  * @apiName CreatePayment
-//  * @apiGroup Payment
-//  * @apiSuccess {Object} payment Payment's data.
-//  * @apiError {Object} 400 Some parameters may contain invalid values.
-//  * @apiError 404 Payment not found.
-//  */
-// router.post('/',
-//     master(),
-//     token({ required: true, roles: ['user'] }),
-//     create)
+/**
+ * @api {post} /payments Create payment
+ * @apiName CreatePayment
+ * @apiGroup Payment
+ * @apiSuccess {Object} payment Payment's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Payment not found.
+ */
+router.post('/zalo-pay',
+    token({ required: true, roles: ['user'] }),
+    body(),
+    connectZaloPay)
 
 /**
  * @api {post} /payments Create payment

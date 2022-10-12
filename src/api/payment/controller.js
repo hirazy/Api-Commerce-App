@@ -1,5 +1,6 @@
 import { decrypt } from '../../services/encrypt';
 import { connectMomoWallet, requestTokenConnect } from '../../services/momo';
+import { bindingZaloPay } from '../../services/zalo-pay'
 import { notFound, success } from '../../services/response/';
 import { IsJsonString } from '../../services/util';
 import { momoSecretKey } from '../../config'
@@ -10,6 +11,20 @@ export const create = ({ body }, res, next) =>
     .then((payment) => payment.view(true))
     .then(success(res, 201))
     .catch(next)
+
+export const connectZaloPay = async({ body }, res, next) => {
+
+    let bodyConnectZalo = {
+
+    }
+
+    let responseConnect = await bindingZaloPay(bodyConnectZalo)
+
+    Payment.create(body)
+        .then((payment) => payment.view(true))
+        .then(success(res, 201))
+        .catch(next)
+}
 
 export const connectMomoPayment = async({ bodymen: { body }, user }, res, next) => {
 
@@ -87,13 +102,15 @@ export const createMomoPayment = async({ bodymen: { body }, user }, res, next) =
                         })
                         .then((payment) => {
                             if (payment != null) {
-                                res.status(200).json(payment.view())
+                                res.status(200).json({
+                                    code: 200,
+                                    message: 'Create payment success',
+                                    ...payment.view()
+                                })
                             }
                         })
                 }
 
-                // Payment.create({})
-                //     .then((payment) => {})
             }
         })
 

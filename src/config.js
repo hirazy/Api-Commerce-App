@@ -26,6 +26,7 @@ const config = {
         port: process.env.PORT || 9000,
         ip: process.env.IP || '0.0.0.0',
         apiRoot: process.env.API_ROOT || '',
+        ngrokToken: requireProcessEnv('NGROK_TOKEN'),
         defaultEmail: requireProcessEnv('DEFAULT_EMAIL'),
         sendgridKey: requireProcessEnv('SENDGRID_KEY'),
         masterKey: requireProcessEnv('MASTER_KEY'),

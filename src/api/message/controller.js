@@ -8,6 +8,14 @@ const fs = require("fs");
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
+
+/**
+ * Import Socket
+ * @param {*} param0 
+ * @param {*} res 
+ * @param {*} next 
+ */
+
 export const create = ({ bodymen: { body }, user }, res, next) => {
     console.log('Create Text Message')
     Room.find({ shop: body.shop, user: user.id })
@@ -21,6 +29,9 @@ export const create = ({ bodymen: { body }, user }, res, next) => {
                 }
                 Message.create(messageBody)
                     .then((message) => {
+                        /**
+                         * Create Successfull => Emit message
+                         */
                         res.status(200).json(message.view())
                     })
                     .catch(next)
@@ -40,6 +51,10 @@ export const create = ({ bodymen: { body }, user }, res, next) => {
                         Message.create(messageBody)
                             .then((message) => {
                                 res.status(200).json(message.view())
+
+                                /**
+                                 * Create Successfull => Emit message
+                                 */
                             })
                     })
                     .catch(next)

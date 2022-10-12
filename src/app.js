@@ -1,8 +1,9 @@
 import http from 'http'
-import { env, mongo, port, ip, apiRoot } from './config'
+import { env, mongo, port, ip, apiRoot, ngrokToken } from './config'
 import mongoose from './services/mongoose'
 import express from './services/express'
 import api from './api'
+import ngrok from 'ngrok'
 // import { client } from '../src/services/redis'
 
 const app = express(apiRoot, api)
@@ -19,16 +20,16 @@ if (mongo.uri) {
 }
 mongoose.Promise = Promise
 
-setImmediate(() => {
-    server.listen(port, ip, () => {
+setImmediate(async() => {
+
+    server.listen(port, ip, async() => {
         console.log('Express server listening on http://%s:%d, in %s mode', ip, port, env)
+
+        await ngrok.authtoken(ngrokToken)
+        const url = await ngrok.connect(port);
+        console.log(`URL ${url}`)
+        const apiUrl = ngrok.getUrl();
     })
-})
-
-app.get('/', async(req, res) => {
-    // await client.connect()
-
-    console.log("Hehe " + await client.get("name"))
 })
 
 // IO

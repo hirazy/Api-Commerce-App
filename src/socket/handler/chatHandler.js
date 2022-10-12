@@ -1,3 +1,8 @@
+import Message, { schema } from '../../../src/api/message/model'
+import Room, { roomSchema } from '../../../src/api/room/model'
+import User, { userSchema } from '../../../src/api/user/model'
+import { sendFCM, sendMultipleFCM } from '../../services/fcm'
+
 /**
  * @param {*} id 
  * @param {*} tag 
@@ -7,7 +12,9 @@
 const sendMessageToId = (id, tag, mess) => {
     try {
         global.io.to(id).emit(tag, mess)
-    } catch (error) {}
+    } catch (error) {
+        sendFCM()
+    }
 }
 
 /**

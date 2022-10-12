@@ -38,8 +38,6 @@ export const createSms = ({ bodymen: { body: { phone } } }, res, next) => {
 export const createEmail = ({ bodymen: { body: { email } } }, res, next) => {
 
     if (!isEmail(email)) {
-        console.log('Response ')
-
         res.status(200).json({
             code: 400,
             "status": "Please enter valid email."
