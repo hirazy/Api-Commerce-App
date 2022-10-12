@@ -142,7 +142,11 @@ shopSchema.methods = {
             images: this.images
                 // add properties for a full view
         } : view
-    }
+    },
+
+    authenticate(password) {
+        return CryptoJS.AES.decrypt(this.password, passwordSecret) == password ? this : false
+    },
 }
 
 const model = mongoose.model('Shop', shopSchema)

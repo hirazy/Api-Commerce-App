@@ -13,6 +13,9 @@ services:
 
         depends_on:
             - mongo
+        links:
+            - redis
+            - mongo
     mongo:
         container_name: mongo
         image: mongo
@@ -33,7 +36,9 @@ services:
             - nodejs-app
         networks:
             - example-net
-
+    redis:
+        container_name: redis-3mkg
+        image: 'redis:7.0.1'
 networks:
   example-net:
     external: true

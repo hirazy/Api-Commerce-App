@@ -26,6 +26,7 @@ const config = {
         port: process.env.PORT || 9000,
         ip: process.env.IP || '0.0.0.0',
         apiRoot: process.env.API_ROOT || '',
+        ngrokToken: requireProcessEnv('NGROK_TOKEN'),
         defaultEmail: requireProcessEnv('DEFAULT_EMAIL'),
         sendgridKey: requireProcessEnv('SENDGRID_KEY'),
         masterKey: requireProcessEnv('MASTER_KEY'),
@@ -39,9 +40,11 @@ const config = {
         momoPartnerCode: requireProcessEnv('MOMO_PARTNER_CODE'),
         momoPartnerName: requireProcessEnv('MOMO_PARTNER_NAME'),
         momoPublicKey: requireProcessEnv('MOMO_PUBLIC_KEY'),
+        macKey: requireProcessEnv('MAC_ZALO_PAY_KEY'),
         googleProjectId: requireProcessEnv('GOOGLE_PROJECT_ID'),
         twilioAccountSID: requireProcessEnv('TWILIO_ACCOUNT_SID'),
         twilioAuthToken: requireProcessEnv('TWILIO_AUTH_TOKEN'),
+        hostNameZalo: requireProcessEnv('HOST_NAME_ZALO'),
         passwordSecret: requireProcessEnv('PASSWORD_SECRET'),
         mongo: {
             options: {

@@ -12,20 +12,29 @@ const paymentSchema = new Schema({
         enum: ['Momo'],
         default: 'Momo'
     },
+    amount: {
+        type: Number,
+        required: false,
+        default: 0
+    },
     payment_status: {
         type: String,
         required: true,
-        enum: ['Token', 'Payment'],
-        default: 'Payment'
+        enum: ['token', 'payment'],
+        default: 'payment'
     },
     provider: {
         type: String,
-        required: true,
+        required: false,
         default: ''
     },
     account_no: {
         type: String,
-        required: true,
+        required: false,
+    },
+    orderId: {
+        type: String,
+        required: true
     },
     requestId: {
         type: String,
@@ -35,11 +44,20 @@ const paymentSchema = new Schema({
         type: String,
         required: false
     },
-    expiry: {
+    createdAt: {
         type: Date,
-        required: true
+        default: Date.now,
     }
 }, { timestamps: true })
+
+paymentSchema.pre('save', function(next) {
+    console.log('Pre Save')
+    if (this.payment_status === 'token') {
+        console.log('Expires')
+        this.createdAt = 120
+    }
+    next()
+})
 
 paymentSchema.methods = {
     view(full) {
@@ -47,7 +65,7 @@ paymentSchema.methods = {
             // simple view
             id: this.id,
             createdAt: this.createdAt,
-            updatedAt: this.updatedAt
+            payment_status: this.payment_status,
         }
 
         return full ? {

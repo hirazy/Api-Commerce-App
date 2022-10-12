@@ -3,8 +3,7 @@ import { port, ip } from '../../config'
 const redis = require('redis')
 
 const client = redis.createClient({
-    host: 'localhost',
-    port: 49153
+    url: 'redis://default:redispw@localhost:49153'
 });
 
 client.on('error', (err) => console.log('Redis Client Error', err));

@@ -29,13 +29,19 @@ admin.initializeApp({
  * @param {*} deviceTokens : List Device Tokens of Users
  * @param {*} messages : List Messages 
  */
-export const sendFCM = async(deviceTokens, messages) => {
+export const sendFCM = (deviceToken, message) => {
+    return admin.messaging().sendToDevice(deviceToken, message)
+        // .then((response) => {
+        // })
+        // .catch((error) => {});
+}
+
+/**
+ * @param {*} deviceTokens : List Device Tokens of Users
+ * @param {*} messages : List Messages 
+ */
+export const sendMultipleFCM = async(deviceTokens, messages) => {
     admin.messaging().sendMulticast(deviceTokens, messages)
-        .then((response) => {
-            // Response is a message ID string.
-            console.log('Successfully sent message:', response);
-        })
-        .catch((error) => {
-            console.log('Error sending message:', error);
-        });
+        .then((response) => {})
+        .catch((error) => {});
 }

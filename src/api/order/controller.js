@@ -4,11 +4,12 @@ import OrderItem, { oderItemSchema } from '../order_item/model'
 import Purchase, { purchaseSchema } from '../purchase/model'
 import Cart, { cartItemSchema } from '../cart/model'
 import Payment, { paymentSchema } from '../payment/model'
+import { purchaseByToken } from '../../services/momo'
 
 export const create = async({ user, body }, res, next) => {
 
     if (body.address == null && body.address != '') {
-        return res.status()
+        return res.status(404)
     }
 
     let order = await Order.create({
@@ -43,7 +44,11 @@ export const create = async({ user, body }, res, next) => {
 }
 
 
-export const createOrderPayment = ({ bodymen: { body } }, res, next) => {
+export const createOrderPayment = ({ bodymen: { body }, user }, res, next) => {
+    Payment.find({ user: user.id, payment_status: 'token' })
+        .then((payments) => {
+            let payment = payments[0]
+        })
 
 }
 

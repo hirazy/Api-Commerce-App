@@ -7,7 +7,7 @@ import isMobilePhone from 'validator/lib/isMobilePhone';
 
 export const createSms = ({ bodymen: { body: { phone } } }, res, next) => {
     if (!isMobilePhone(phone)) {
-        res.status(400).json({
+        res.status(200).json({
             code: 400,
             "status": "Please enter valid phone number."
         })
@@ -38,7 +38,7 @@ export const createSms = ({ bodymen: { body: { phone } } }, res, next) => {
 export const createEmail = ({ bodymen: { body: { email } } }, res, next) => {
 
     if (!isEmail(email)) {
-        res.status(400).json({
+        res.status(200).json({
             code: 400,
             "status": "Please enter valid email."
         })
